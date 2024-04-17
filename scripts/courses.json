@@ -1,0 +1,156 @@
+[
+  {
+    "name": "Python Programming",
+    "code": "BCA200",
+    "language": "python",
+    "teacher": "661fda6a0022a2f84bdf0eba",
+    "students": [
+      "66200f74c7d9540f524eaa20",
+      "66200f74c7d9540f524eaa22",
+      "66200f6ef36d2a6dd6893057",
+      "66200f6ef36d2a6dd689305d",
+      "66200f6ef36d2a6dd689305a",
+      "66200f5cddaba9b16c5e6e46",
+      "66200f5cddaba9b16c5e6e4a",
+      "661fda6a0022a2f84bdf0ebe",
+      "66200f5cddaba9b16c5e6e47",
+      "66201057a4e5a8774510c238",
+      "66201057a4e5a8774510c233",
+      "66201057a4e5a8774510c232",
+      "66200f74c7d9540f524eaa25",
+      "66200f74c7d9540f524eaa24"
+    ],
+    "assignments": []
+  },
+  {
+    "name": "JavaScript for Web Dev",
+    "code": "BCA204",
+    "language": "js",
+    "teacher": "661fda6a0022a2f84bdf0ec0",
+    "students": [
+      "66200f74c7d9540f524eaa20",
+      "66200f74c7d9540f524eaa22",
+      "66200f6ef36d2a6dd6893057",
+      "66200f6ef36d2a6dd689305d",
+      "66200f6ef36d2a6dd689305a",
+      "66200f5cddaba9b16c5e6e46",
+      "66200f5cddaba9b16c5e6e4a",
+      "661fda6a0022a2f84bdf0ebe",
+      "66200f5cddaba9b16c5e6e47",
+      "66201057a4e5a8774510c238",
+      "66201057a4e5a8774510c233",
+      "66201057a4e5a8774510c232",
+      "66200f74c7d9540f524eaa25",
+      "66200f74c7d9540f524eaa24"
+    ],
+    "assignments": []
+  },
+  {
+    "name": "Practical Computing",
+    "code": "CSE104",
+    "language": "python",
+    "teacher": "661fda6a0022a2f84bdf0ebb",
+    "students": [
+      "66201057a4e5a8774510c237",
+      "66201057a4e5a8774510c231",
+      "66201057a4e5a8774510c236",
+      "66201057a4e5a8774510c235",
+      "66201057a4e5a8774510c234",
+      "66201057a4e5a8774510c22f",
+      "66200f74c7d9540f524eaa21",
+      "66200f74c7d9540f524eaa28",
+      "66200f74c7d9540f524eaa27",
+      "66200f6ef36d2a6dd689305f",
+      "66200f6ef36d2a6dd6893059",
+      "66200f6ef36d2a6dd6893056",
+      "66200f5cddaba9b16c5e6e49",
+      "66200f5cddaba9b16c5e6e41"
+    ],
+    "assignments": []
+  },
+  {
+    "name": "JavaScript Basics",
+    "code": "CSE201",
+    "language": "js",
+    "teacher": "661fda6a0022a2f84bdf0ebe",
+    "students": [
+      "66201057a4e5a8774510c237",
+      "66201057a4e5a8774510c231",
+      "66201057a4e5a8774510c236",
+      "66201057a4e5a8774510c235",
+      "66201057a4e5a8774510c234",
+      "66201057a4e5a8774510c22f",
+      "66200f74c7d9540f524eaa21",
+      "66200f74c7d9540f524eaa28",
+      "66200f74c7d9540f524eaa27",
+      "66200f6ef36d2a6dd689305f",
+      "66200f6ef36d2a6dd6893059",
+      "66200f6ef36d2a6dd6893056",
+      "66200f5cddaba9b16c5e6e49",
+      "66200f5cddaba9b16c5e6e41"
+    ],
+    "assignments": []
+  },
+  {
+    "name": "Python for Noobs",
+    "code": "ECE300",
+    "language": "python",
+    "teacher": "661fda6a0022a2f84bdf0ebd",
+    "students": [
+      "66200f74c7d9540f524eaa23",
+      "66200f6ef36d2a6dd6893058",
+      "66200f6ef36d2a6dd689305c",
+      "66200f6ef36d2a6dd689305b",
+      "66200f5cddaba9b16c5e6e43",
+      "66200f5cddaba9b16c5e6e48",
+      "66200f5cddaba9b16c5e6e45",
+      "66200f5cddaba9b16c5e6e44"
+    ],
+    "assignments": []
+  },
+  {
+    "name": "JavaScript for Noobs",
+    "code": "ECE203",
+    "language": "js",
+    "teacher": "661fda6a0022a2f84bdf0ec2",
+    "students": [
+      "66200f74c7d9540f524eaa23",
+      "66200f6ef36d2a6dd6893058",
+      "66200f6ef36d2a6dd689305c",
+      "66200f6ef36d2a6dd689305b",
+      "66200f5cddaba9b16c5e6e43",
+      "66200f5cddaba9b16c5e6e48",
+      "66200f5cddaba9b16c5e6e45",
+      "66200f5cddaba9b16c5e6e44"
+    ],
+    "assignments": []
+  },
+  {
+    "name": "JavaScript Pro",
+    "code": "MCA105",
+    "language": "js",
+    "teacher": "661fda6a0022a2f84bdf0eba",
+    "students": [
+      "66200f5cddaba9b16c5e6e42",
+      "66200f6ef36d2a6dd689305e",
+      "66200f74c7d9540f524eaa1f",
+      "66200f74c7d9540f524eaa26",
+      "66201057a4e5a8774510c230"
+    ],
+    "assignments": []
+  },
+  {
+    "name": "Python for Pros",
+    "code": "MCA201",
+    "language": "python",
+    "teacher": "661fda6a0022a2f84bdf0ebc",
+    "students": [
+      "66200f5cddaba9b16c5e6e42",
+      "66200f6ef36d2a6dd689305e",
+      "66200f74c7d9540f524eaa1f",
+      "66200f74c7d9540f524eaa26",
+      "66201057a4e5a8774510c230"
+    ],
+    "assignments": []
+  }
+]

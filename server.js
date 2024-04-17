@@ -11,7 +11,7 @@ const DB = process.env.DB_URI.replace("<PASSWORD>", process.env.DB_PASSWORD);
 
 mongoose.connect(DB).then((conn) => {
   console.log("Database connection successful!");
-  console.log(conn.connections);
+  // console.log(conn.modelNames());
 });
 
 const app = require("./app");
