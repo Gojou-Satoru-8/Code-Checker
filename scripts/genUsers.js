@@ -76,10 +76,10 @@ mongoose
 const [, , operation, collection] = process.argv;
 if (operation === "--import") {
   if (collection === "students") {
-    const students = generateStudents(10);
+    const students = generateStudents(2);
     populateDB(students, Student);
   } else if (collection === "teachers") {
-    const teachers = generateTeachers(10);
+    const teachers = generateTeachers(2);
     populateDB(teachers, Teacher);
   }
 } else if (operation === "--delete") {

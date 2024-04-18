@@ -56,6 +56,12 @@ const studentSchema = new mongoose.Schema({
   passwordResetTokenExpiry: { type: Date, select: false },
 });
 
+// SCHEMA METHODS:
+studentSchema.methods.isPasswordCorrect = async function (password) {
+  // console.log(this);
+  return await bcrypt.compare(password, this.password);
+};
+
 // MONGOOSE MIDDLEWARES:
 
 studentSchema.pre("save", async function (next) {
@@ -70,7 +76,7 @@ studentSchema.pre("save", async function (next) {
 
 studentSchema.pre(/^find/, async function (next) {
   this.select("-__v").populate({
-    path: "course",
+    path: "courses",
     select: "name code",
   });
   next();
