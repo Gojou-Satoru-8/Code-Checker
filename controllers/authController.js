@@ -41,8 +41,12 @@ exports.postStudentLogin = catchAsync(async (req, res, next) => {
 
   //   res.locals.user = student;
   const token = signToken(student._id);
+  console.log("JWT token before sending as cookie:", token);
+  console.log(typeof +process.env.JWT_EXPIRES_IN);
+  console.log(process.env.NODE_ENV);
+
   res.cookie("jwt", token, {
-    maxAge: +process.env.JWT_EXPIRES_IN,
+    maxAge: +process.env.JWT_EXPIRES_IN * 1000,
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,
   });
@@ -50,7 +54,7 @@ exports.postStudentLogin = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     message: "Logged in!",
-    redirectURL: "/students/courses",
+    redirectURL: "/students/home",
     data: {
       student: {
         email,
@@ -60,4 +64,21 @@ exports.postStudentLogin = catchAsync(async (req, res, next) => {
       },
     },
   });
+});
+
+exports.protect = catchAsync(async (req, res, next) => {
+  console.log("Cookies: ", req.cookies);
+
+  // Check is token exists in the cookie:
+  const token = req.cookies?.jwt;
+  if (!token) throw new AppError("No JWT token present", 401, "JSON");
+
+  // Verify cookie (Possible erros being invalid token and token expired):
+  const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+  // Find student based on id inside decoded JWT:
+  const student = await Student.findById(decoded.id);
+  console.log(student);
+  req.student = student;
+  next();
 });

@@ -1,7 +1,7 @@
 const AppError = require("../utils/appError");
 
 const sendErrorDev = (err, res) => {
-  console.log("Error in Development Environment 🔴:", `${err.statusCode} - ${err.message}`);
+  console.log("Error in Dev Environment 🔴:", `${err.statusCode} - ${err.message}`);
   console.log(err.stack);
   if (err.type === "JSON") {
     res.status(err.statusCode).json({

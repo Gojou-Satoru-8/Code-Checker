@@ -28,8 +28,7 @@ form.addEventListener("submit", async (e) => {
     const results = await response.json();
     console.log(results);
     // console.log(results.redirectURL);
-
-    location.assign(results.redirectURL);
+    results.redirectURL && location.assign(results.redirectURL);
   } catch (err) {
     console.log(JSON.parse(err));
   }
