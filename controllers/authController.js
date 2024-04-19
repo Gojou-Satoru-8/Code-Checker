@@ -118,7 +118,8 @@ exports.protectStudent = catchAsync(async (req, res, next) => {
 
   // Check is token exists in the cookie:
   const token = req.cookies?.jwt_student;
-  if (!token) throw new AppError("No JWT token present for student", 401, "JSON");
+  // if (!token) throw new AppError("No JWT token present for student", 401, "JSON");
+  if (!token) throw new AppError("No JWT token present for student", 401, "render", "/students/login");
 
   // Verify cookie (Possible erros being invalid token and token expired):
   const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -132,10 +133,12 @@ exports.protectStudent = catchAsync(async (req, res, next) => {
 
 exports.protectTeacher = catchAsync(async (req, res, next) => {
   console.log("Cookies: ", req.cookies);
+  // console.log("URL: ", req.url, req.originalUrl, req.path);
 
   // Check is token exists in the cookie:
   const token = req.cookies?.jwt_teacher;
-  if (!token) throw new AppError("No JWT token present for teacher", 401, "JSON");
+  // if (!token) throw new AppError("No JWT token present for teacher", 401, "JSON");
+  if (!token) throw new AppError("No JWT token present for teacher", 401, "render", "/teachers/login");
 
   // Verify cookie (Possible erros being invalid token and token expired):
   const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);

@@ -7,7 +7,7 @@
 
 @layer base {
   body {
-    animation: fadeInAnimation ease 1s;
+    animation: fadeInAnimation ease 0.75s;
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
   }

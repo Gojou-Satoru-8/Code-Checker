@@ -814,7 +814,7 @@ html{
 }
 
 body {
-  animation: fadeInAnimation ease 1s;
+  animation: fadeInAnimation ease 0.75s;
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
 }
@@ -1642,14 +1642,6 @@ body {
   transform: translateY(0) scale(1);
   z-index: 3;
   opacity: 1;
-}
-
-.alert-info{
-  border-color: var(--fallback-in,oklch(var(--in)/0.2));
-  --tw-text-opacity: 1;
-  color: var(--fallback-inc,oklch(var(--inc)/var(--tw-text-opacity)));
-  --alert-bg: var(--fallback-in,oklch(var(--in)/1));
-  --alert-bg-mix: var(--fallback-b1,oklch(var(--b1)/1));
 }
 
 .alert-success{
@@ -2560,24 +2552,14 @@ details.collapse summary::-webkit-details-marker{
   margin-right: auto;
 }
 
-.my-5{
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
-}
-
-.my-6{
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.my-4{
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
 .my-2{
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+}
+
+.my-5{
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
 }
 
 .mb-6{
@@ -2624,12 +2606,12 @@ details.collapse summary::-webkit-details-marker{
   height: 1.25rem;
 }
 
-.h-\[86vh\]{
-  height: 86vh;
-}
-
 .h-6{
   height: 1.5rem;
+}
+
+.h-\[86vh\]{
+  height: 86vh;
 }
 
 .min-h-40{
@@ -2676,12 +2658,12 @@ details.collapse summary::-webkit-details-marker{
   width: 13rem;
 }
 
-.w-\[90\%\]{
-  width: 90%;
-}
-
 .w-6{
   width: 1.5rem;
+}
+
+.w-\[90\%\]{
+  width: 90%;
 }
 
 .flex-1{
@@ -2843,11 +2825,6 @@ details.collapse summary::-webkit-details-marker{
 .px-12{
   padding-left: 3rem;
   padding-right: 3rem;
-}
-
-.py-12{
-  padding-top: 3rem;
-  padding-bottom: 3rem;
 }
 
 .py-4{
