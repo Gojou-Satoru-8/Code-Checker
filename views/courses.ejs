@@ -76,21 +76,41 @@
     </header>
     <main class="min-h-[80vh] bg-white flex flex-col gap-8">
       <section class="welcome-msg mt-6 mx-6 min-h-[30vh] shadow-lg rounded-xl">
-        <h1 class="text-3xl text-primary-content">Welcome {Student Name}</h1>
+        <h1 class="text-3xl py-8 text-center text-primary-content">Welcome <%= (locals.student) ? student.name: teacher.name %></h1>
+        <p class="text-lg px-12 text-primary-content">Here's a list of the courses you're <%= (locals.student) ? "taking": "teaching" %></p>
       </section>
       <section
         class="courses mx-4 mb-8 grid grid-cols-[45%_45%] md:grid-cols-[30%_30%_30%] grid-rows-2 auto-rows-fr gap-12 justify-center"
       >
+      <% if (locals.student) {%>
+        <% student.courses.forEach((course) => {%>
         <div class="card bg-base-100 shadow-xl">
           <div class="card-body">
-            <h2 class="card-title">Course 1!</h2>
+            <h2 class="card-title"><%= course.name %></h2>
+            <p><%= course.code %></p>
+            <p><%= course.teacher.name %></p>
             <p>Course info</p>
             <div class="card-actions justify-end">
               <button class="btn btn-primary btn-circle">Go</button>
             </div>
           </div>
-        </div>
-        <div class="card bg-base-100 shadow-xl">
+        </div>  
+      <%  }); %>
+      <%  } else if (locals.teacher) { %>
+        <% teacher.courses.forEach((course) => { %>
+          <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+              <h2 class="card-title"><%= course.name %></h2>
+              <p><%= course.code %></p>
+              <p>Course info</p>
+              <div class="card-actions justify-end">
+                <button class="btn btn-primary btn-circle">Go</button>
+              </div>
+            </div>
+          </div>  
+       <% }); %> 
+       <% } %> 
+        <!-- <div class="card bg-base-100 shadow-xl">
           <div class="card-body">
             <h2 class="card-title">Course 2!</h2>
             <p>Course info</p>
@@ -134,7 +154,7 @@
               <button class="btn btn-primary btn-circle">Go</button>
             </div>
           </div>
-        </div>
+        </div> -->
       </section>
     </main>
     <footer class="py-6">

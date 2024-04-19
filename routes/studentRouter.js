@@ -4,5 +4,5 @@ const studentController = require("../controllers/studentController");
 const router = express.Router({ mergeParams: true });
 
 router.route("/login").get(authController.getStudentLogin).post(authController.postStudentLogin);
-router.get("/home", authController.protect, studentController.getStudentCourses);
+router.get("/home", authController.protectStudent, studentController.getStudentCourses);
 module.exports = router;

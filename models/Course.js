@@ -36,6 +36,14 @@ courseSchema.pre("save", function (next) {
   next();
 });
 
+courseSchema.pre(/^find/, function (next) {
+  this.select("-__v").populate({
+    path: "teacher",
+    select: "name email",
+  });
+  next();
+});
+
 const Course = mongoose.model("Course", courseSchema);
 
 module.exports = Course;

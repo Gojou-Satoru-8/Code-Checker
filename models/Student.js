@@ -77,7 +77,7 @@ studentSchema.pre("save", async function (next) {
 studentSchema.pre(/^find/, async function (next) {
   this.select("-__v").populate({
     path: "courses",
-    select: "name code",
+    select: "name code language assignments teacher",
   });
   next();
 });

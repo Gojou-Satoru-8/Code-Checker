@@ -16,7 +16,7 @@ app.use(express.urlencoded());
 app.use(cookieParser());
 
 app.use("/students", studentRouter);
-app.use("/students", teacherRouter);
+app.use("/teachers", teacherRouter);
 app.route("/api/v1/codes").get(codeController.allCodes).post(codeController.postCode);
 
 app.all("*", (err, req, res, next) => {

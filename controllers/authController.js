@@ -1,4 +1,5 @@
 const Student = require("../models/Student");
+const Teacher = require("../models/Teacher");
 const Course = require("../models/Course");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
@@ -12,18 +13,35 @@ const signToken = (id) => {
   return token;
 };
 
-exports.getStudentLogin = catchAsync(async (req, res, next) => {
-  if (!req.user) return res.render("login.ejs");
+const respondWithCookie = (res, statusCode, cookie, data) => {
+  res.cookie(cookie.name, cookie.value, {
+    maxAge: +process.env.JWT_EXPIRES_IN * 1000,
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+  });
 
-  const student = await Student.findById(req.user._id).select("+password");
-  if (!student) return res.render("login.ejs");
-  else res.render("courses.ejs");
-  //   next();
+  res.status(statusCode).json({ status: "success", message: "Logged in!", ...data });
+};
+
+exports.getStudentLogin = catchAsync(async (req, res, next) => {
+  // If student is already logged in :)
+  console.log("Get login triggered");
+
+  if (req.cookies.jwt_student) res.status(302).redirect("/students/home");
+  //   Or res.status(302).set({ Location: "/students/home" });
+  else res.render("login.ejs");
+});
+
+exports.getTeacherLogin = catchAsync(async (req, res, next) => {
+  // If teacher is already logged in :)
+  if (req.cookies.jwt_teacher) res.status(302).redirect("/teachers/home");
+  //   Or res.status(302).set({ Location: "/students/home" });
+  else res.render("login.ejs");
 });
 
 exports.postStudentLogin = catchAsync(async (req, res, next) => {
-  console.log(req.body);
-  console.log(req.cookies["jwt"]);
+  console.log("Post login triggered with: ", req.body);
+  // console.log(req.cookies["jwt"]);
 
   // Extract email and password:
   const { email, password } = req.body;
@@ -35,7 +53,7 @@ exports.postStudentLogin = catchAsync(async (req, res, next) => {
   // If student doesn't exist:
   if (!student) throw new AppError("No such student with that email", 404, "JSON");
 
-  // If student exists but passwords don't match:
+  // If student exists but password is incorrect:
   const isPasswordMatch = await student.isPasswordCorrect(password);
   if (!isPasswordMatch) throw new AppError("Wrong password", 401, "JSON");
 
@@ -45,33 +63,62 @@ exports.postStudentLogin = catchAsync(async (req, res, next) => {
   console.log(typeof +process.env.JWT_EXPIRES_IN);
   console.log(process.env.NODE_ENV);
 
-  res.cookie("jwt", token, {
-    maxAge: +process.env.JWT_EXPIRES_IN * 1000,
-    secure: process.env.NODE_ENV === "production",
-    httpOnly: true,
-  });
-
-  res.status(200).json({
-    status: "success",
-    message: "Logged in!",
+  const cookie = { name: "jwt_student", value: token };
+  const data = {
     redirectURL: "/students/home",
-    data: {
-      student: {
-        email,
-        name: student.email,
-        year: student.year,
-        courses: student.courses,
-      },
-    },
-  });
+    // student: {
+    //   email,
+    //   name: student.name,
+    //   year: student.year,
+    //   courses: student.courses,
+    // },
+  };
+  respondWithCookie(res, 200, cookie, data);
 });
 
-exports.protect = catchAsync(async (req, res, next) => {
+exports.postTeacherLogin = catchAsync(async (req, res, next) => {
+  console.log(req.body);
+  // console.log(req.cookies["jwt"]);
+
+  // Extract email and password:
+  const { email, password } = req.body;
+
+  // Find teacher with the given email:
+  const teacher = await Teacher.findOne({ email }).select("+password");
+  console.log(teacher);
+
+  // If teacher doesn't exist:
+  if (!teacher) throw new AppError("No such teacher with that email", 404, "JSON");
+
+  // If teacher exists but incorrect password given:
+  const isPasswordMatch = await teacher.isPasswordCorrect(password);
+  if (!isPasswordMatch) throw new AppError("Wrong password", 401, "JSON");
+
+  //   res.locals.user = teacher;
+  const token = signToken(teacher._id);
+  console.log("JWT token before sending as cookie:", token);
+  console.log(typeof +process.env.JWT_EXPIRES_IN);
+  console.log(process.env.NODE_ENV);
+
+  const cookie = { name: "jwt_teacher", value: token };
+  const data = {
+    redirectURL: "/teachers/home",
+    // teacher: {
+    //   email,
+    //   name: teacher.email,
+    //   role: teacher.role,
+    //   courses: teacher.courses,
+    // },
+  };
+  respondWithCookie(res, 200, cookie, data);
+});
+
+exports.protectStudent = catchAsync(async (req, res, next) => {
   console.log("Cookies: ", req.cookies);
 
   // Check is token exists in the cookie:
-  const token = req.cookies?.jwt;
-  if (!token) throw new AppError("No JWT token present", 401, "JSON");
+  const token = req.cookies?.jwt_student;
+  if (!token) throw new AppError("No JWT token present for student", 401, "JSON");
 
   // Verify cookie (Possible erros being invalid token and token expired):
   const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -80,5 +127,25 @@ exports.protect = catchAsync(async (req, res, next) => {
   const student = await Student.findById(decoded.id);
   console.log(student);
   req.student = student;
+  next();
+});
+
+exports.protectTeacher = catchAsync(async (req, res, next) => {
+  console.log("Cookies: ", req.cookies);
+
+  // Check is token exists in the cookie:
+  const token = req.cookies?.jwt_teacher;
+  if (!token) throw new AppError("No JWT token present for teacher", 401, "JSON");
+
+  // Verify cookie (Possible erros being invalid token and token expired):
+  const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+  // Find student based on id inside decoded JWT:
+  const teacher = await Teacher.findById(decoded.id).populate({
+    path: "courses",
+    select: "name code language students -teacher",
+  });
+  console.log("Teacher retrieved and populated:", teacher);
+  req.teacher = teacher;
   next();
 });

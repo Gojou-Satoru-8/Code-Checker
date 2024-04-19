@@ -8,6 +8,8 @@ passView.addEventListener("click", (e) => {
 });
 
 const form = document.querySelector(".login-form");
+const urlUser = window.location.pathname.includes("students") ? "students" : "teachers";
+console.log(urlUser);
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -16,7 +18,7 @@ form.addEventListener("submit", async (e) => {
   const dataObj = Object.fromEntries(formData);
   console.log(dataObj);
   try {
-    const response = await fetch("/students/login", {
+    const response = await fetch(`/${urlUser}/login`, {
       method: "POST",
       body: JSON.stringify(dataObj),
       credentials: "include",
@@ -30,6 +32,6 @@ form.addEventListener("submit", async (e) => {
     // console.log(results.redirectURL);
     results.redirectURL && location.assign(results.redirectURL);
   } catch (err) {
-    console.log(JSON.parse(err));
+    console.log(err);
   }
 });
