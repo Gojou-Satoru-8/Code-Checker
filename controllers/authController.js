@@ -146,7 +146,7 @@ exports.protectTeacher = catchAsync(async (req, res, next) => {
   // Find student based on id inside decoded JWT:
   const teacher = await Teacher.findById(decoded.id).populate({
     path: "courses",
-    select: "name code language students -teacher",
+    select: "name code language assignments students -teacher",
   });
   console.log("Teacher retrieved and populated:", teacher);
   req.teacher = teacher;

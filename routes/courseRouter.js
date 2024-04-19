@@ -4,7 +4,8 @@ const router = express.Router({ mergeParams: true });
 
 // TODO: Dilemma here as to how to route "/" such that it calls authController.protectStudent if /students/courses
 // and calls authController.protectTeacher if at /teachers/courses.
-router.get("/", courseController.getAllStudentCourses);
+// NOTE: DONE
+// router.get("/", courseController.getAllCourses);
 router.get("/:course_code", courseController.getCourseAssignments);
 
 module.exports = router;
