@@ -11,6 +11,7 @@ exports.getTeacherCourses = (req, res, next) => {
   //   });
 };
 
+// NOTE: To be removed later:
 exports.getCourses = catchAsync(async (req, res, next) => {
   const courses = await Course.find();
   res.status(200).json({
