@@ -79,6 +79,14 @@
         <div class="card-body w-[90%] min-h-[40vh] items-center text-center">
           <h1 class="card-title text-4xl">Login</h1>
           <p class="text-xl mt-4">Please enter your credentials</p>
+          <div id="success-alert" role="alert" class="my-2 hidden alert alert-success w-4/5 justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>Logged In successfully!</span>
+          </div>
+          <div id="error-alert" role="alert" class="my-2 hidden alert alert-error w-4/5 justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span >Error! Task failed successfully.</span>
+          </div>
           <form class="login-form labels py-4 w-4/5 flex flex-col gap-3" action="/students/login"  method="POST">
             <label class="input input-bordered flex items-center gap-2">
               <svg
