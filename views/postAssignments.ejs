@@ -75,8 +75,17 @@
       </div>
     </header>
     <main class="min-h-[80vh] bg-white flex flex-col items-center gap-8">
+      <dialog id="my_modal_3" class="modal">
+        <div class="modal-box bg-error text-error-content">
+          <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <h3 class="msg-modal font-bold text-lg">Hello!</h3>
+        </div>
+      </dialog>
       <section class="welcome-msg w-5/6 mt-6 mx-6 min-h-[20vh] bg-white shadow-lg rounded-xl text-primary-content p-4">
-        <h1 class="text-3xl py-4 text-center text-primary-content">Upload Assignment</h1>
+        <h1 class="text-3xl py-4 text-center text-primary-content"><span class="course-code"><%= course.code %></span> - <%= course.name%></h1>
+        <h1 class="text-2xl py-2 text-center text-primary-content">Upload Assignment</h1>
         <input type="text" placeholder="Assignment Name" class="assign-name block w-1/2 mx-auto mt-2 text-secondary input input-bordered input-primary" />
         <input type="number" placeholder="Number of questions" class="num-questions block w-1/2 mx-auto mt-2  text-secondary input input-bordered input-primary" />
         <input type="submit" class="submit-btn btn block w-1/6 mx-auto mt-2">

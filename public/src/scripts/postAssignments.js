@@ -1,4 +1,7 @@
-const assignmentName = document.querySelector(".assign-name");
+const courseCodeEl = document.querySelector(".course-code");
+const modalEl = document.getElementById("my_modal_3");
+const modalMsgEl = document.querySelector(".msg-modal");
+const assignmentNameField = document.querySelector(".assign-name");
 const submitBtn = document.querySelector(".submit-btn");
 const numberField = document.querySelector(".num-questions");
 const form = document.querySelector(".form");
@@ -22,6 +25,40 @@ numberField.addEventListener("change", (e) => {
   }
 });
 
-submitBtn.addEventListener("click", (e) => {
+submitBtn.addEventListener("click", async (e) => {
+  // e.preventDefault();  // NOTE: Not required since it isn't within a form.
+
+  const courseCode = courseCodeEl.textContent.trim();
+  const assignmentName = assignmentNameField.value;
+  const questionTextAreas = [...document.querySelectorAll(".textarea")];
+  // console.log(questionTextAreas);
+  // questionTextAreas.forEach((el) => console.log(el.id, el.value));
+  const questions = questionTextAreas.map((element) => element.value.trim()).filter((text) => text !== "");
+  console.log(questions);
+  // Validate before http request:
+  if (!assignmentName) {
+    // alert("Please fill in the Assignment Name");
+    modalMsgEl.textContent = "Please fill in the Assignment Name";
+    modalEl.showModal();
+  } else if (questions.length === 0) {
+    // alert("Please enter at least one question");
+    modalMsgEl.textContent = "Please enter at least one question";
+    modalEl.showModal();
+  }
   // Make http request:
+  else {
+    try {
+      const response = await fetch(`/teachers/courses/${courseCode}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ courseCode, assignmentName, questions }),
+      });
+      console.log(response);
+      const results = await response.json();
+      console.log(results);
+      // setTimeout()
+    } catch (err) {
+      console.log(err);
+    }
+  }
 });

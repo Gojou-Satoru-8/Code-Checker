@@ -9,7 +9,10 @@ router.route("/login").get(authController.getTeacherLogin).post(authController.p
 router.get("/home", authController.protectTeacher, teacherController.getTeacherHome);
 // router.use("/courses", authController.protectTeacher, courseRouter);
 router.get("/courses", authController.protectTeacher, teacherController.getAllCoursesTaught);
-router.get("/courses/:course_code", authController.protectTeacher, teacherController.getCourseAssignments);
+router
+  .route("/courses/:course_code")
+  .get(authController.protectTeacher, teacherController.getCourseAssignments)
+  .post(authController.protectTeacher, teacherController.postCourseAssignment);
 router.get(
   "/courses/:course_code/setAssignment",
   authController.protectTeacher,
