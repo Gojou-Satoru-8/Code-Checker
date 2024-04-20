@@ -93,7 +93,9 @@
             <h3 class="text-xl"><%= assignment.name %></>
             <p class="my-2"><%= assignment.questions.length %> questions</>
             <div class="card-actions justify-end">
-              <button class="btn btn-primary btn-circle"><a href="<%= (locals.teacher) ? `/teachers/courses/${course.code}`: `/students/courses/${course.code}` %>">View Questions</a></button>
+              <form action="<%= (locals.teacher) ? `/teachers/courses/${course.code}`: `/students/courses/${course.code}/assignments/${assignment.id}` %>">
+                <button class="btn btn-primary btn-circle">View</button>
+              </form>
             </div>
           </div>
         </div>

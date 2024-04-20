@@ -77,68 +77,63 @@
     </header>
     <main class="bg-white text-black min-h-[80vh] flex flex-col">
       <section class="assign-info m-6 rounded-xl shadow-lg">
-        <h1 class="text-3xl">Assignment Heading</h1>
-        <p class="text-lg">More assignment info</p>
+        <h1 class="text-3xl py-4 text-center text-primary-content"><%= course.code %> - <%= course.name %></h1>
+        <h2 class="text-2xl py-2 text-center text-primary-content">Assignment: <%= assignment.name %></h2>
+        <p class="text-lg px-12 py-4 text-center text-primary-content">
+          This assignment has <%= assignment.questions.length %> questions
+        </p>
+        <input type="submit" class="submit-btn btn block w-1/6 mx-auto mb-2">
       </section>
       <section
-        class="forms text-white mx-6 mb-6 grid grid-cols-[45%_45%] md:grid-cols-[30%_30%_30%] grid-rows-3 auto-rows-fr gap-8"
+        class="forms text-white mx-6 mb-6 grid grid-cols-[45%_45%] grid-rows-3 auto-rows-fr gap-8 justify-center"
       >
-        <div class="collapse collapse-arrow bg-base-200 min-h-40">
-          <input type="radio" name="my-accordion-3" checked="checked" />
-          <div class="collapse-title text-xl font-medium">Question 1</div>
-          <div class="collapse-content">
-            <p>Content</p>
+        <% assignment.questions.forEach((question, index) => { %>
+          <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+              <h2 class="card-title">Question <%= index + 1 %></h2>
+              <p><%= question.question %></p>
+              <div class="card-actions justify-center">
+                  <input type="file" class="file-input file-input-bordered file-input-primary w-full max-w-xs" />
+              </div>
+            </div>
+          </div>
+        <% }) %>
+        <!-- <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title">Course 2!</h2>
+            <p>Course info</p>
+            <div class="card-actions justify-end">
+              <button class="btn btn-primary btn-circle"><a href="/students/courses/{course.code}">View</a></button>
+            </div>
           </div>
         </div>
-        <div class="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-3" checked="checked" />
-          <div class="collapse-title text-xl font-medium">Question 1</div>
-          <div class="collapse-content">
-            <p>Content</p>
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title">Course 3!</h2>
+            <p>Course info</p>
+            <div class="card-actions justify-end">
+              <button class="btn btn-primary btn-circle"><a href="/students/courses/{course.code}">View</a></button>
+            </div>
           </div>
         </div>
-        <div class="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-3" checked="checked" />
-          <div class="collapse-title text-xl font-medium">Question 1</div>
-          <div class="collapse-content">
-            <p>Content</p>
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title">Course 4!</h2>
+            <p>Course info</p>
+            <div class="card-actions justify-end">
+              <button class="btn btn-primary btn-circle"><a href="/students/courses/{course.code}">View</a></button>
+            </div>
           </div>
         </div>
-        <div class="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-3" checked="checked" />
-          <div class="collapse-title text-xl font-medium">Question 1</div>
-          <div class="collapse-content">
-            <p>Content</p>
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h2 class="card-title">Course 5!</h2>
+            <p>Course info</p>
+            <div class="card-actions justify-end">
+              <button class="btn btn-primary btn-circle"><a href="/students/courses/{course.code}">View</a></button>
+            </div>
           </div>
-        </div>
-        <div class="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-3" checked="checked" />
-          <div class="collapse-title text-xl font-medium">Question 1</div>
-          <div class="collapse-content">
-            <p>Content</p>
-          </div>
-        </div>
-        <div class="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-3" checked="checked" />
-          <div class="collapse-title text-xl font-medium">Question 1</div>
-          <div class="collapse-content">
-            <p>Content</p>
-          </div>
-        </div>
-        <div class="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-3" checked="checked" />
-          <div class="collapse-title text-xl font-medium">Question 1</div>
-          <div class="collapse-content">
-            <p>Content</p>
-          </div>
-        </div>
-        <div class="collapse collapse-arrow bg-base-200">
-          <input type="radio" name="my-accordion-3" checked="checked" />
-          <div class="collapse-title text-xl font-medium">Question 1</div>
-          <div class="collapse-content">
-            <p>Content</p>
-          </div>
-        </div>
+        </div> -->
       </section>
     </main>
   </body>

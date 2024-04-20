@@ -92,7 +92,9 @@
             <p><%= course.teacher.name %></p>
             <p>Course info</p>
             <div class="card-actions justify-end">
-              <button class="btn btn-primary btn-circle"><a href="/students/courses/<%= course.code %>">View</a></button>
+              <form action="/students/courses/<%= course.code %>">
+                <button class="btn btn-primary btn-circle">View</button>
+              </form>
             </div>
           </div>
         </div>  
