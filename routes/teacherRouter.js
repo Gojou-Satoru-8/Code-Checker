@@ -19,4 +19,13 @@ router.get(
   authController.protectTeacher,
   teacherController.getPostAssignmentsPage,
 );
+
+// NOTE: Following route essentially redirects to /courses/:course_code, using the same middleware
+router.get("/courses/:course_code/assignments/", authController.protectTeacher, teacherController.redirectToCourse);
+router.get(
+  "/courses/:course_code/assignments/:assign_id",
+  authController.protectTeacher,
+  teacherController.getAssignmentQuestions,
+);
+
 module.exports = router;

@@ -8,13 +8,13 @@ const { redirect } = require("statuses");
 // ROUTE: /teachers/home
 exports.getTeacherHome = (req, res, next) => {
   console.log(req.teacher);
-  //   res.status(200).render("courses.ejs", { teacher: req.teacher });
-  res.status(200).json({
-    status: "success",
-    data: {
-      teacher: req.teacher,
-    },
-  });
+  res.status(200).render("courses.ejs", { teacher: req.teacher });
+  // res.status(200).json({
+  //   status: "success",
+  //   data: {
+  //     teacher: req.teacher,
+  //   },
+  // });
 };
 
 // ROUTE: /teachers/courses
@@ -91,3 +91,30 @@ exports.getPostAssignmentsPage = (req, res, next) => {
 
   res.status(200).render("postAssignments.ejs", { course });
 };
+
+// ROUTE: /teachers/courses/:course_code/assignments
+exports.redirectToCourse = (req, res, next) => {
+  res.redirect(`/teachers/courses/${req.params.course_code}`);
+};
+
+// ROUTE: /teachers/courses/:course_code/assignments/:assign_id
+exports.getAssignmentQuestions = catchAsync(async (req, res, next) => {
+  const teacher = req.teacher;
+  const course_code = req.params.course_code;
+
+  const course = teacher.courses.find((course) => course.code === course_code);
+  await course.populate("assignments");
+  // console.log(course.assignments);
+
+  const assignment = course.assignments.find((assignment) => assignment.id === req.params.assign_id);
+  // console.log(assignment);
+
+  // res.status(200).json({
+  //   status: "success",
+  //   data: { course, assignment },
+  // });
+  res.status(200).render("upload_assignments.ejs", {
+    course: { name: course.name, code: course_code, teacher: teacher.name },
+    assignment,
+  });
+});

@@ -15,4 +15,13 @@ router.get("/home", authController.protectStudent, studentController.getStudentH
 
 router.get("/courses", authController.protectStudent, studentController.getAllCoursesTaken);
 router.get("/courses/:course_code", authController.protectStudent, studentController.getCourseAssignments);
+
+// NOTE: Following route essentially redirects to /courses/:course_code, using the same middleware
+router.get("/courses/:course_code/assignments/", authController.protectStudent, studentController.redirectToCourse);
+router.get(
+  "/courses/:course_code/assignments/:assign_id",
+  authController.protectStudent,
+  studentController.getAssignmentQuestions,
+);
+
 module.exports = router;
