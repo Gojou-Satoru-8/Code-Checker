@@ -5,6 +5,7 @@ const studentRouter = require("./routes/studentRouter");
 const teacherRouter = require("./routes/teacherRouter");
 const codeController = require("./controllers/codeController");
 const globalErrorHandler = require("./controllers/errorController");
+const AppError = require("./utils/appError");
 
 const app = express();
 app.use(express.static(`${__dirname}/public`));
@@ -19,9 +20,9 @@ app.use("/students", studentRouter);
 app.use("/teachers", teacherRouter);
 app.route("/api/v1/codes").get(codeController.allCodes).post(codeController.postCode);
 
-app.all("*", (err, req, res, next) => {
-  console.log("Error handling middlware triggered");
-  res.render("error.ejs", { error: err });
+app.all("*", (req, res, next) => {
+  console.log("Error route-handler triggered.");
+  throw new AppError("No such route defined!", 404, "render");
 });
 
 app.use(globalErrorHandler);
