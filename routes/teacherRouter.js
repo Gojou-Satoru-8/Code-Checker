@@ -9,12 +9,13 @@ router.route("/login").get(authController.getTeacherLogin).post(authController.p
 router.get("/home", authController.protectTeacher, teacherController.getTeacherHome);
 // router.use("/courses", authController.protectTeacher, courseRouter);
 router.get("/courses", authController.protectTeacher, teacherController.getAllCoursesTaught);
+// Currently redirecting to /teachers/home
 router
   .route("/courses/:course_code")
   .get(authController.protectTeacher, teacherController.getCourseAssignments)
   .post(authController.protectTeacher, teacherController.postCourseAssignment);
 router.get(
-  "/courses/:course_code/setAssignment",
+  "/courses/:course_code/new-assignment",
   authController.protectTeacher,
   teacherController.getPostAssignmentsPage,
 );

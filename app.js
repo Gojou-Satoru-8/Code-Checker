@@ -22,7 +22,7 @@ app.route("/api/v1/codes").get(codeController.allCodes).post(codeController.post
 
 app.all("*", (req, res, next) => {
   console.log("Error route-handler triggered.");
-  throw new AppError("No such route defined!", 404, "render");
+  throw new AppError(`No such route defined: ${req.originalUrl}`, 404, "render");
 });
 
 app.use(globalErrorHandler);
