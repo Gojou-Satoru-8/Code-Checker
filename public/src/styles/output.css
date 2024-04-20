@@ -2868,6 +2868,26 @@ details.collapse summary::-webkit-details-marker{
   height: 86vh;
 }
 
+.h-\[50vh\]{
+  height: 50vh;
+}
+
+.h-1\/2{
+  height: 50%;
+}
+
+.h-\[20vh\]{
+  height: 20vh;
+}
+
+.h-1\/5{
+  height: 20%;
+}
+
+.h-1\/6{
+  height: 16.666667%;
+}
+
 .min-h-40{
   min-height: 10rem;
 }
@@ -3176,6 +3196,11 @@ details.collapse summary::-webkit-details-marker{
 .text-2xl{
   font-size: 1.5rem;
   line-height: 2rem;
+}
+
+.text-sm{
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 .font-medium{

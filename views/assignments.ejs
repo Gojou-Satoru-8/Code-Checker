@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Course Details</title>
+    <link rel="shortcut icon" href="/src/assets/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/src/styles/output.css" />
   </head>
   <body>
@@ -76,22 +77,28 @@
     </header>
     <main class="min-h-[80vh] bg-white flex flex-col gap-8">
       <section class="welcome-msg mt-6 mx-6 min-h-[20vh] bg-white shadow-lg rounded-xl text-primary-content p-4">
-        <h1 class="text-3xl">Course description</h1>
-        <p>More details about the course</p>
+        <h1 class="text-3xl py-8 text-center text-primary-content"><%= course.code %> - <%= course.name %></h1>
+        <% if (locals.student) { %>
+          <p class="text-lg px-12 text-primary-content">This course is taught by <%= course.teacher.name %></p>
+        <% } %>
+        <p class="text-lg px-12 text-primary-content">This course has <%= course.assignments.length %> assignments</p>
       </section>
       <section
         class="courses mx-4 mb-8 grid grid-cols-[45%_45%] md:grid-cols-[30%_30%_30%] grid-rows-2 auto-rows-fr gap-12 justify-center"
       >
+      <% course.assignments.forEach((assignment, index) => { %>
         <div class="card bg-base-100 shadow-xl">
           <div class="card-body">
-            <h2 class="card-title">Assignment 1!</h2>
-            <p>Assignment Topic</p>
+            <h2 class="card-title">Assignment <%= index + 1%></h2>
+            <h3 class="text-xl"><%= assignment.name %></>
+            <p class="my-2"><%= assignment.questions.length %> questions</>
             <div class="card-actions justify-end">
-              <button class="btn btn-primary btn-circle">Go</button>
+              <button class="btn btn-primary btn-circle"><a href="<%= (locals.teacher) ? `/teachers/courses/${course.code}`: `/students/courses/${course.code}` %>">View Questions</a></button>
             </div>
           </div>
         </div>
-        <div class="card bg-base-100 shadow-xl">
+      <% }) %>
+        <!-- <div class="card bg-base-100 shadow-xl">
           <div class="card-body">
             <h2 class="card-title">Assignment 2!</h2>
             <p>Assignment Topic</p>
@@ -135,7 +142,7 @@
               <button class="btn btn-primary btn-circle">Go</button>
             </div>
           </div>
-        </div>
+        </div> -->
         <!-- <div class="card bg-base-100 shadow-xl">
           <div class="card-body">
             <h2 class="card-title">Assignment extra!</h2>

@@ -20,6 +20,11 @@ app.use("/students", studentRouter);
 app.use("/teachers", teacherRouter);
 app.route("/api/v1/codes").get(codeController.allCodes).post(codeController.postCode);
 
+// Ignore favicon.ico request (otherwise creates errors in console)
+app.use("/favicon.ico", (req, res, next) => {
+  res.send();
+});
+
 app.all("*", (req, res, next) => {
   console.log("Error route-handler triggered.");
   throw new AppError(`No such route defined: ${req.originalUrl}`, 404, "render");

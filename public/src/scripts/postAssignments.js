@@ -1,5 +1,6 @@
 const courseCodeEl = document.querySelector(".course-code");
 const modalEl = document.getElementById("my_modal_3");
+const modalElDiv = modalEl.querySelector(".modal-box"); // For setting background (bg-error/bg-success)
 const modalMsgEl = document.querySelector(".msg-modal");
 const assignmentNameField = document.querySelector(".assign-name");
 const submitBtn = document.querySelector(".submit-btn");
@@ -56,6 +57,15 @@ submitBtn.addEventListener("click", async (e) => {
       console.log(response);
       const results = await response.json();
       console.log(results);
+      modalMsgEl.textContent = results.message;
+      modalEl.showModal();
+      if (results.status === "success") {
+        modalElDiv.classList.remove("bg-error");
+        modalElDiv.classList.add("bg-info");
+        setTimeout(() => {
+          results.redirectUrl && location.assign(results.redirectUrl);
+        }, 1000);
+      }
       // setTimeout()
     } catch (err) {
       console.log(err);
