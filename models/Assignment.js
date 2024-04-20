@@ -5,10 +5,10 @@ const assignmentSchema = new mongoose.Schema({
     type: String,
     required: [true, "Assignment must have a name"],
   },
-  course: {
-    type: mongoose.Schema.ObjectId,
-    required: [true, "Assignment must be linked to a course"],
-  },
+  // course: {
+  //   type: mongoose.Schema.ObjectId,
+  //   required: [true, "Assignment must be linked to a course"],
+  // },
   questions: [{ type: mongoose.Schema.ObjectId, ref: "Question" }],
 });
 
