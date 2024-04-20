@@ -24,20 +24,26 @@ exports.getAllCoursesTaught = (req, res, next) => {
 };
 
 // ROUTE: /teachers/courses/:course_code
-exports.getCourseAssignments = (req, res, next) => {
+exports.getCourseAssignments = catchAsync(async (req, res, next) => {
   // Middleware preceded by protectTeacher(), so req.teacher will always be set:
   const teacher = req.teacher;
   const course_code = req.params.course_code;
 
-  //   const [courseDetail] = teacher.courses.filter((course) => course.code === course_code);  // OR:
-  const courseDetail = teacher.courses.find((course) => course.code === course_code);
-  if (!courseDetail) throw new AppError("No such course taught by this teacher!", 404, "JSON");
-  //   res.status(200).json({
-  //     teacher: req.teacher,
-  //     course: courseDetail,
-  //   });
-  res.render("assignments.ejs", { teacher, course: courseDetail });
-};
+  //   const [course] = teacher.courses.filter((course) => course.code === course_code);  // OR:
+  const course = teacher.courses.find((course) => course.code === course_code);
+  if (!course) throw new AppError("No such course taught by this teacher!", 404, "JSON");
+  await course.populate({ path: "assignments" });
+  // NOTE: Populating assignments populates the questions too, since Assignment schema is configured to populate
+  // the questions fields using pre-find middleware.
+
+  // res.status(200).json({
+  //   teacher: req.teacher,
+  //   course,
+  // });
+  res.render("assignments.ejs", { teacher, course: course });
+  // TODO: Might need to rethink what data is being sent for rendering, since as (1) whole teacher object is unused
+  // (2) furthermore, assignments is the real requirement here.
+});
 
 // ROUTE: /teachers/courses/:course_code (POST only)
 exports.postCourseAssignment = async (req, res, next) => {
@@ -78,7 +84,7 @@ exports.postCourseAssignment = async (req, res, next) => {
   });
 };
 
-// ROUTE: /teachers/courses/:course_code/setAssignment
+// ROUTE: /teachers/courses/:course_code/new-assignment
 exports.getPostAssignmentsPage = (req, res, next) => {
   const course = req.teacher.courses.find((course) => course.code === req.params.course_code);
   // console.log("Course for post-assignments page:", course);

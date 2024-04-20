@@ -11,5 +11,10 @@ const questionSchema = new mongoose.Schema({
   // },
 });
 
+questionSchema.pre(/^find/, function (next) {
+  this.select("-__v");
+  next();
+});
+
 const Question = mongoose.model("Question", questionSchema);
 module.exports = Question;
