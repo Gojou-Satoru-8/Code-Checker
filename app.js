@@ -1,10 +1,12 @@
 const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+// const flash = require("express-flash");
 const studentRouter = require("./routes/studentRouter");
 const teacherRouter = require("./routes/teacherRouter");
 const codeController = require("./controllers/codeController");
 const globalErrorHandler = require("./controllers/errorController");
+// const flashHandler = require("./controllers/flashController");
 const AppError = require("./utils/appError");
 
 const app = express();
@@ -15,10 +17,12 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cookieParser());
+// app.use(flash());
 
 app.use("/students", studentRouter);
 app.use("/teachers", teacherRouter);
 app.route("/api/v1/codes").get(codeController.allCodes).post(codeController.postCode);
+// app.use("/flash", flashHandler);
 
 // Ignore favicon.ico request (otherwise creates errors in console)
 app.use("/favicon.ico", (req, res, next) => {

@@ -120,6 +120,7 @@ exports.protectStudent = catchAsync(async (req, res, next) => {
   const token = req.cookies?.jwt_student;
   // if (!token) throw new AppError("No JWT token present for student", 401, "JSON");
   if (!token) throw new AppError("No JWT token present for student", 401, "render", "/students/login");
+  // Redirect URL when using flash messaging: "/flash?err=Logged%20Out&redirectUrl=/students/login"
 
   // Verify cookie (Possible erros being invalid token and token expired):
   const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
