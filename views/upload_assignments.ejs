@@ -77,64 +77,79 @@
     </header>
     <main class="bg-white text-black min-h-[80vh] flex flex-col">
       <section class="assign-info m-6 rounded-xl shadow-lg">
-        <h1 class="text-3xl py-4 text-center text-primary-content"><%= course.code %> - <%= course.name %></h1>
-        <h2 class="text-2xl py-2 text-center text-primary-content">Assignment: <%= assignment.name %></h2>
+        <h1 class="text-3xl py-4 text-center text-primary-content">
+          <span class="course-code"><%= course.code %></span> - <%= course.name %>
+        </h1>
+        <h2 class="text-2xl py-2 text-center text-primary-content">
+          <span class="hidden assign-id"><%= assignment.id %></span>Assignment: <%= assignment.name %>
+        </h2>
         <p class="text-lg px-12 py-4 text-center text-primary-content">
           This assignment has <%= assignment.questions.length %> questions
         </p>
-        <input type="submit" class="submit-btn btn block w-1/6 mx-auto mb-2">
+        <div id="success-alert" role="alert" class="my-2 m-auto max-w-max md:max-w-max hidden alert alert-success  justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <span>Logged In successfully!</span>
+        </div>
+        <div id="error-alert" role="alert" class="my-2 m-auto max-w-max md:max-w-max hidden alert alert-error  justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <span >Error! Task failed successfully.</span>
+        </div>
       </section>
-      <section
-        class="forms text-white mx-6 mb-6 grid grid-cols-[45%_45%] grid-rows-3 auto-rows-fr gap-8 justify-center"
-      >
-        <% assignment.questions.forEach((question, index) => { %>
-          <div class="card bg-base-100 shadow-xl">
+      <form class="form text-white mx-6" action="" method="POST" enctype="multipart/form-data">
+        <section
+          class="grid mb-6 grid-cols-[45%_45%] grid-rows-2 auto-rows-fr gap-8 justify-center"
+        >
+          <% assignment.questions.forEach((question, index) => { %>
+            <div class="card bg-base-100 shadow-xl">
+              <div class="card-body">
+                <h2 class="card-title">Question <%= index + 1 %></h2>
+                <p><%= question.question %></p>
+                <div class="card-actions justify-center">
+                    <input type="file" name="<%= question.id %>" class="codeFiles file-input file-input-bordered file-input-primary w-full max-w-xs" />
+                </div>
+              </div>
+            </div>
+          <% }) %>
+          <!-- <div class="card bg-base-100 shadow-xl">
             <div class="card-body">
-              <h2 class="card-title">Question <%= index + 1 %></h2>
-              <p><%= question.question %></p>
-              <div class="card-actions justify-center">
-                  <input type="file" class="file-input file-input-bordered file-input-primary w-full max-w-xs" />
+              <h2 class="card-title">Course 2!</h2>
+              <p>Course info</p>
+              <div class="card-actions justify-end">
+                <button class="btn btn-primary btn-circle"><a href="/students/courses/{course.code}">View</a></button>
               </div>
             </div>
           </div>
-        <% }) %>
-        <!-- <div class="card bg-base-100 shadow-xl">
-          <div class="card-body">
-            <h2 class="card-title">Course 2!</h2>
-            <p>Course info</p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary btn-circle"><a href="/students/courses/{course.code}">View</a></button>
+          <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+              <h2 class="card-title">Course 3!</h2>
+              <p>Course info</p>
+              <div class="card-actions justify-end">
+                <button class="btn btn-primary btn-circle"><a href="/students/courses/{course.code}">View</a></button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="card bg-base-100 shadow-xl">
-          <div class="card-body">
-            <h2 class="card-title">Course 3!</h2>
-            <p>Course info</p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary btn-circle"><a href="/students/courses/{course.code}">View</a></button>
+          <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+              <h2 class="card-title">Course 4!</h2>
+              <p>Course info</p>
+              <div class="card-actions justify-end">
+                <button class="btn btn-primary btn-circle"><a href="/students/courses/{course.code}">View</a></button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="card bg-base-100 shadow-xl">
-          <div class="card-body">
-            <h2 class="card-title">Course 4!</h2>
-            <p>Course info</p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary btn-circle"><a href="/students/courses/{course.code}">View</a></button>
+          <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+              <h2 class="card-title">Course 5!</h2>
+              <p>Course info</p>
+              <div class="card-actions justify-end">
+                <button class="btn btn-primary btn-circle"><a href="/students/courses/{course.code}">View</a></button>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="card bg-base-100 shadow-xl">
-          <div class="card-body">
-            <h2 class="card-title">Course 5!</h2>
-            <p>Course info</p>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary btn-circle"><a href="/students/courses/{course.code}">View</a></button>
-            </div>
-          </div>
-        </div> -->
-      </section>
+          </div> -->
+        </section>
+        <input type="submit" class="submit-btn btn block w-1/6 mx-auto mb-2">
+      </form>
     </main>
+    <script type="text/javascript" src="/src/scripts/uploadAssignment.js"></script>
   </body>
 </html>

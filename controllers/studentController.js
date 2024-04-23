@@ -1,5 +1,53 @@
+const multer = require("multer");
+const path = require("path");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
+const Submission = require("../models/Submission");
+
+const multerStorage = multer.diskStorage({
+  // destination: (req, file, cb) => {
+  //   console.log("------------- Multer diskStorage destination middleware:");
+  //   console.log(file);
+
+  //   cb(null, `${__dirname}/../public/code-uploads`);
+  // },
+  // filename: (req, file, cb) => {
+  //   console.log("------------- Multer diskStorage fileName middleware:");
+  //   console.log(file);
+  //   // const fileExt = file.mimetype.split("/").at(-1);
+  //   // console.log(`${req.student.id}-${file.originalname}.${fileExt}`);
+  //   cb(null, `${req.student.id}-${file.originalname}`);
+  // },
+  destination: (req, file, cb) => {
+    // console.log("------------- Multer diskStorage destination middleware:");
+    console.log(file);
+    cb(null, `${__dirname}/../public/code-uploads`);
+  },
+  filename: (req, file, cb) => {
+    // console.log("------------- Multer diskStorage fileName middleware:");
+    // console.log(file);
+    const fileExt = file.mimetype.split("/").at(-1);
+    console.log(`${req.student.id}-${file.originalname}.${fileExt}`);
+
+    cb(null, `${req.student.id}-${file.originalname}`);
+  },
+});
+
+// const multerFilter = (req, file, cb) => {
+//   // if file.mime
+//   console.log("------------- Multer Filter middleware:");
+//   console.log(file);
+
+//   cb(null, true);
+// };
+
+const upload = multer({
+  storage: multerStorage,
+  // storage: multer.memoryStorage(),
+  // fileFilter: multerFilter,  // NOTE: The filtering functionality is added on the client side.
+});
+
+exports.uploadFiles = upload.array("codeFiles");
 
 // ROUTE: /students/home
 exports.getStudentHome = (req, res, next) => {
@@ -23,7 +71,7 @@ exports.getAllCoursesTaken = (req, res, next) => {
 exports.getCourseAssignments = catchAsync(async (req, res, next) => {
   // Middleware preceded by protectStudent(), so req.student will always be set:
   const student = req.student;
-  const course_code = req.params.course_code;
+  const { course_code } = req.params;
 
   //   const [course] = student.courses.filter((course) => course.code === course_code);  // OR:
   const course = student.courses.find((course) => course.code === course_code);
@@ -49,13 +97,13 @@ exports.redirectToCourse = (req, res, next) => {
 // ROUTE: /students/courses/:course_code/assignments/:assign_id
 exports.getAssignmentQuestions = catchAsync(async (req, res, next) => {
   const student = req.student;
-  const course_code = req.params.course_code;
+  const { course_code, assign_id } = req.params;
 
   const course = student.courses.find((course) => course.code === course_code);
   await course.populate("assignments");
   // console.log(course.assignments);
 
-  const assignment = course.assignments.find((assignment) => assignment.id === req.params.assign_id);
+  const assignment = course.assignments.find((assignment) => assignment.id === assign_id);
   // console.log(assignment);
 
   // res.status(200).json({
@@ -67,3 +115,62 @@ exports.getAssignmentQuestions = catchAsync(async (req, res, next) => {
     assignment,
   });
 });
+
+// ROUTE: /students/courses/:course_code/assignments/:assign_id (POST)
+exports.postAssignmentSolutions = catchAsync(async (req, res, next) => {
+  console.log("Request URL:", req.originalUrl);
+  console.log("Headers Content-Type:", req.headers?.["content-type"]);
+
+  // console.log("Request Body:", req.body);
+  // console.log("Files uploaded: ", req.files);
+  const student = req.student;
+  const { course_code, assign_id } = req.params;
+
+  const submissions = req.files.map((file) => {
+    const questionId = file.originalname.split(".").at(0);
+    return { question: questionId, student: req.student.id, filePath: file.filename };
+  });
+  console.log(submissions);
+  console.log("-------------");
+  // NOTE: Now we gotta exclude those submissions already inserted, otherwise insertMany causes problems.
+  // One way:
+  // const submissionsToInsert = [];
+  // for (const submission of submissions) {
+  //   const existingSubmission = await Submission.findOne(submission);
+  //   console.log(existingSubmission);
+  //   if (existingSubmission.id) console.log("Existing submission persists");
+  //   else submissionsToInsert.push({...submission, createdAt: Date.now()});
+  // }
+  // const insertedSubmissions = await Submission.insertMany(submissionsToInsert);
+  // const insertedSubmissions = await Submission.insertMany(submissions, { ordered: true });
+
+  // Better way: findOneAndUpdate() with upsert: true
+  const insertedSubmissions = [];
+  for (const submission of submissions) {
+    const insertedSubmission = await Submission.findOneAndUpdate(
+      submission, // Finds a document with this query
+      { $setOnInsert: submission },
+      { new: true, upsert: true, runValidators: true },
+      // If no docs found matching the query, upsert will insert a new doc. But to avoid existing docs (which
+      // matched the query) to get overwritten unnecessarily, $setOnInsert ensures that these fields are set
+      // only on insert
+    );
+    insertedSubmissions.push(insertedSubmission);
+  }
+  console.log(insertedSubmissions);
+
+  res.status(200).json({
+    status: "success",
+    message: "Files uploded successfully",
+    filesUploaded: req.files.length,
+    filesInsertedToDB: insertedSubmissions.length,
+  });
+});
+
+exports.viewSubmissions = async (req, res, next) => {
+  const submissions = await Submission.find({ student: req.student.id });
+  console.log(submissions);
+  res.status(200).json({
+    data: submissions,
+  });
+};

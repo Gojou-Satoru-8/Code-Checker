@@ -18,10 +18,10 @@ router.get("/courses/:course_code", authController.protectStudent, studentContro
 
 // NOTE: Following route essentially redirects to /courses/:course_code, using the same middleware
 router.get("/courses/:course_code/assignments/", authController.protectStudent, studentController.redirectToCourse);
-router.get(
-  "/courses/:course_code/assignments/:assign_id",
-  authController.protectStudent,
-  studentController.getAssignmentQuestions,
-);
+router
+  .route("/courses/:course_code/assignments/:assign_id")
+  .get(authController.protectStudent, studentController.getAssignmentQuestions)
+  .post(authController.protectStudent, studentController.uploadFiles, studentController.postAssignmentSolutions);
 
+router.route("/all-submissions").get(authController.protectStudent, studentController.viewSubmissions);
 module.exports = router;
