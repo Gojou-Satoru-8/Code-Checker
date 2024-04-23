@@ -5,19 +5,6 @@ const catchAsync = require("../utils/catchAsync");
 const Submission = require("../models/Submission");
 
 const multerStorage = multer.diskStorage({
-  // destination: (req, file, cb) => {
-  //   console.log("------------- Multer diskStorage destination middleware:");
-  //   console.log(file);
-
-  //   cb(null, `${__dirname}/../public/code-uploads`);
-  // },
-  // filename: (req, file, cb) => {
-  //   console.log("------------- Multer diskStorage fileName middleware:");
-  //   console.log(file);
-  //   // const fileExt = file.mimetype.split("/").at(-1);
-  //   // console.log(`${req.student.id}-${file.originalname}.${fileExt}`);
-  //   cb(null, `${req.student.id}-${file.originalname}`);
-  // },
   destination: (req, file, cb) => {
     // console.log("------------- Multer diskStorage destination middleware:");
     console.log(file);
@@ -106,12 +93,27 @@ exports.getAssignmentQuestions = catchAsync(async (req, res, next) => {
   const assignment = course.assignments.find((assignment) => assignment.id === assign_id);
   // console.log(assignment);
 
+  // Find existing submission by students for each question inside the assignment:
+  for (const question of assignment.questions) {
+    console.log("Question: ", question);
+    const existingSubmission = await Submission.findOne({ student: student.id, question: question.id });
+    // console.log("Existing submission: ", existingSubmission);
+    // question.existingSubmissionPath = existingSubmission.filePath;
+    // NOTE: Above way to be used if files are to be downloaded via link relative to static folder ie public
+    question.existingSubmissionId = existingSubmission?.id;
+    // console.log("Question with existing submission:", question);
+    // NOTE: Logging question to the console will not show the properties set right now, but only those that
+    // have been persisted to the database.
+    console.log("Question with existing submission:", question.existingSubmissionId);
+  }
+
   // res.status(200).json({
   //   status: "success",
   //   data: { course, assignment },
   // });
   res.status(200).render("upload_assignments.ejs", {
-    course: { name: course.name, code: course_code, student: student.name },
+    course: { name: course.name, code: course_code },
+    student: { name: student.name, id: student.id },
     assignment,
   });
 });
@@ -130,8 +132,8 @@ exports.postAssignmentSolutions = catchAsync(async (req, res, next) => {
     const questionId = file.originalname.split(".").at(0);
     return { question: questionId, student: req.student.id, filePath: file.filename };
   });
-  console.log(submissions);
-  console.log("-------------");
+  console.log("Submissions:", submissions);
+  console.log("--------------------------X--------------------------");
   // NOTE: Now we gotta exclude those submissions already inserted, otherwise insertMany causes problems.
   // One way:
   // const submissionsToInsert = [];
@@ -157,20 +159,56 @@ exports.postAssignmentSolutions = catchAsync(async (req, res, next) => {
     );
     insertedSubmissions.push(insertedSubmission);
   }
-  console.log(insertedSubmissions);
+  console.log("Inserted Submissions: ", insertedSubmissions);
 
   res.status(200).json({
     status: "success",
     message: "Files uploded successfully",
     filesUploaded: req.files.length,
     filesInsertedToDB: insertedSubmissions.length,
+    studentId: student.id,
+    questionIds: insertedSubmissions.map((submission) => submission.question.id),
+    // NOTE: If using submission Id for managing routes, following data needs to be sent:
+    // submissions: insertedSubmissions.map((submission) => ({
+    //   submissionId: submission.id,
+    //   questionId: submission.question.id,
+    // })),
   });
 });
 
-exports.viewSubmissions = async (req, res, next) => {
+exports.viewSubmissionsByStudent = catchAsync(async (req, res, next) => {
   const submissions = await Submission.find({ student: req.student.id });
   console.log(submissions);
   res.status(200).json({
     data: submissions,
   });
-};
+});
+
+// exports.viewSubmissionById (name if using submissionId in req.params)
+exports.viewSubmissionByStudentAndQuestion = catchAsync(async (req, res, next) => {
+  // const submission = await Submission.findById(req.params.submissionId);
+  const submission = await Submission.findOne({ student: req.params.studentId, question: req.params.questionId });
+  console.log(submission);
+
+  if (!submission)
+    throw new AppError("No submission by this student for this question", 404, "render", "/students/home");
+
+  // res.status(200).json({
+  //   data: submission,
+  // });
+  res.status(200).sendFile(submission.filePath, { root: `${__dirname}/../public/code-uploads` });
+  // res.status(200).download(submission.filePath, { root: `${__dirname}/../public/code-uploads` });
+  // Both produce (download) effect, except sendFile instructs browsers to present supported file types
+});
+
+// deleteSubmissionById (name if using submissionId in req.params)
+exports.deleteSubmissionByStudentAndQuestion = catchAsync(async (req, res, next) => {
+  // const submission = await Submission.findByIdAndDelete(req.params.submissionId);
+  const submission = await Submission.findOne({ student: req.params.studentId, question: req.params.questionId });
+  console.log(submission);
+  console.log("Deleted submission: ", submission);
+
+  if (!submission) console.log("No submission to delete", 404);
+
+  res.status(204).json({ status: "success", message: "Deleted Successfully" });
+});

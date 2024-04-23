@@ -8,35 +8,56 @@ const notifyAndDisappear = (alertElement, message) => {
 };
 
 const form = document.querySelector("form");
-// const inputFields = [...document.querySelectorAll(".codeFiles")];
+
+// BUTTONS:
 const submitBtn = document.querySelector(".submit-btn");
+const viewDeleteBtnsDivs = [...document.querySelectorAll(".view-delete-btns")];
+
+// ALERTS:
 const successAlert = document.querySelector(".alert-success");
 const errorAlert = document.querySelector(".alert-error");
 
+// Text from HTML:
 const courseCode = document.querySelector(".course-code").textContent.trim();
 const assignmentID = document.querySelector(".assign-id").textContent.trim();
+
 const acceptedFileExtensions = ["py", "c", "cpp", "js"];
+
+const addDeletionBehaviour = function () {
+  viewDeleteBtnsDivs.forEach((div) => {
+    const deleteBtn = div.lastElementChild;
+    deleteBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      // NOTE: HTML attributes are always converted to lower case.
+      const { studentid, questionid } = e.target.dataset;
+      const response = await fetch(`/students/${studentid}/submissions/${questionid}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      console.log(response);
+      //   const results = await response.json();   // causes error since status code 204 sends no content
+      //   console.log(results);
+      if (response.status === 204) {
+        notifyAndDisappear(successAlert, "Deleted Successfully");
+        div.classList.add("hidden");
+      }
+    });
+  });
+};
+
+addDeletionBehaviour();
 
 submitBtn.addEventListener("click", async (e) => {
   e.preventDefault(); // As the button is inside a form, default behaviour will reload the page
-  //   console.log(inputFields);
   const files = [];
   const errors = [];
-  //   inputFields.forEach((el) => {
-  //     // console.log(el.name, el.value, el.files);
-  //     console.log([...el.files][0]); // el.files is an array of all files selected for upload.
-  //     const [file] = [...el.files];
-  //     file.name = el.name; // This doesn't modify file name
-  //     files.push(new File([file], el.name)); // Thus, gotta make a new file with a new name.
-  //   });
 
   const inputFormData = new FormData(form);
-  //   console.log(inputFormData);
-  //   for (const [name, val] of formData) console.log(name, val);
+  //   for (const [name, val] of inputFormData) console.log(name, val);
   // Here, name is the question.id and val is the file selected for upload
   for (const [questionID, file] of inputFormData) {
-    // console.log(questionID);
-    // console.log(file);
+    // console.log(questionID, file);
     if (file.name && file.size) {
       // NOTE: If no file is selected for upload, they don't have a name and have size 0.
 
@@ -84,6 +105,26 @@ submitBtn.addEventListener("click", async (e) => {
           successAlert,
           `Successfully uploaded file: ${files.map(([oldFileName]) => oldFileName).join(",")}.`,
         );
+        console.log(results.questionIds);
+
+        results.questionIds.forEach((questionId) => {
+          const [inputField] = document.getElementsByName(questionId);
+          //   console.log("Inputfield", inputField);
+          //   console.log("--------------------------");
+
+          // Input fields which have the name set to the questionIds returned by the response from uploading files.
+          const div = inputField.nextElementSibling;
+          //   console.log("Div to show", div);
+          //   console.log("--------------------------");
+
+          div.classList.remove("hidden");
+          const [viewBtn, deleteBtn] = [...div.children];
+          viewBtn.firstElementChild.setAttribute("href", `/students/${results.studentId}/submissions/${questionId}`);
+          deleteBtn.dataset.studentId = results.studentId;
+          deleteBtn.dataset.questionId = questionId;
+          //   console.log(viewBtn, deleteBtn);
+          //   console.log("--------------------------");
+        });
       } else {
         notifyAndDisappear(errorAlert, results.message);
       }

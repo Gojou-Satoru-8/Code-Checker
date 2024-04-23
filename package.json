@@ -85,12 +85,13 @@
     "vary": "^1.1.2"
   },
   "scripts": {
-    "test": "node --watch-path=./ server.js",
+    "test": "nodemon server.js --ignore public/code-uploads",
     "start": "node server.js"
   },
   "author": "Ankush Bhowmik",
   "license": "ISC",
   "devDependencies": {
-    "@faker-js/faker": "^8.4.1"
+    "@faker-js/faker": "^8.4.1",
+    "nodemon": "^3.1.0"
   }
 }

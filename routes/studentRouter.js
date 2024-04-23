@@ -23,5 +23,11 @@ router
   .get(authController.protectStudent, studentController.getAssignmentQuestions)
   .post(authController.protectStudent, studentController.uploadFiles, studentController.postAssignmentSolutions);
 
-router.route("/all-submissions").get(authController.protectStudent, studentController.viewSubmissions);
+router.route("/all-submissions").get(authController.protectStudent, studentController.viewSubmissionsByStudent);
+router
+  // .route("/submissions/:submissionId")
+  .route("/:studentId/submissions/:questionId")
+  .get(authController.protectStudent, studentController.viewSubmissionByStudentAndQuestion)
+  .delete(authController.protectStudent, studentController.deleteSubmissionByStudentAndQuestion);
+
 module.exports = router;

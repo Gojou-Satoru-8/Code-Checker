@@ -106,6 +106,17 @@
                 <p><%= question.question %></p>
                 <div class="card-actions justify-center">
                     <input type="file" name="<%= question.id %>" class="codeFiles file-input file-input-bordered file-input-primary w-full max-w-xs" />
+                    <% if (question.existingSubmissionId) {%>
+                      <div class="view-delete-btns">
+                        <button type="button" class="view-btn btn btn-primary btn-ghost"><a href="/students/<%= student.id %>/submissions/<%= question.id %>">View Submitted</a></button>
+                        <button type="button" data-studentId="<%= student.id %>" data-questionId="<%= question.id %>" class="delete-btn btn btn-primary btn-ghost">Delete Submitted</button>
+                      </div>
+                    <% } else {%>
+                      <div class="view-delete-btns hidden">
+                        <button type="button" class="view-btn btn btn-primary btn-ghost"><a href="">View Submitted</a></button>
+                        <button type="button" class="delete-btn btn btn-primary btn-ghost">Delete Submitted</button>
+                      </div>
+                    <% } %>
                 </div>
               </div>
             </div>
@@ -147,7 +158,11 @@
             </div>
           </div> -->
         </section>
-        <input type="submit" class="submit-btn btn block w-1/6 mx-auto mb-2">
+        <div class="submit-reset-btns w-1/3 mx-auto mb-2 flex gap-6 justify-center">
+          <input type="submit" value="Upload" class="submit-btn btn w-1/2">
+          <input type="reset" class="reset-btn btn w-1/2">
+        </div>
+        
       </form>
     </main>
     <script type="text/javascript" src="/src/scripts/uploadAssignment.js"></script>
