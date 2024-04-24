@@ -76,96 +76,86 @@
       </div>
     </header>
 
-    <main class="m-1 border-4 rounded-l-xl">
-      <div class="flex h-[86vh]">
-        <!-- Left Sidebar -->
-        <div class="basis-1/4 p-4 overflow-y-auto">
-          <!-- List of Content -->
-          <div class="collapse collapse-plus bg-base-200">
-            <input type="radio" name="my-accordion-3" checked="checked" />
-            <div class="collapse-title text-xl font-medium">Student 1</div>
-            <div class="collapse-content">
-              <p>Content</p>
-            </div>
-          </div>
-          <div class="divider divider-success"></div>
-          <div class="collapse collapse-plus bg-base-200">
-            <input type="radio" name="my-accordion-3" />
-            <div class="collapse-title text-xl font-medium">Student 2</div>
-            <div class="collapse-content">
-              <p>Content</p>
-            </div>
-          </div>
-          <div class="divider divider-success"></div>
-          <div class="collapse collapse-plus bg-base-200">
-            <input type="radio" name="my-accordion-3" />
-            <div class="collapse-title text-xl font-medium">Student 3</div>
-            <div class="collapse-content">
-              <p>Content</p>
-            </div>
-          </div>
-          <div class="divider divider-success"></div>
-          <div class="collapse collapse-plus bg-base-200">
-            <input type="radio" name="my-accordion-3" checked="checked" />
-            <div class="collapse-title text-xl font-medium">Student 1</div>
-            <div class="collapse-content">
-              <p>Content</p>
-            </div>
-          </div>
-          <div class="divider divider-success"></div>
-          <div class="collapse collapse-plus bg-base-200">
-            <input type="radio" name="my-accordion-3" checked="checked" />
-            <div class="collapse-title text-xl font-medium">Student 1</div>
-            <div class="collapse-content">
-              <p>Content</p>
-            </div>
-          </div>
-          <div class="divider divider-success"></div>
-          <div class="collapse collapse-plus bg-base-200">
-            <input type="radio" name="my-accordion-3" checked="checked" />
-            <div class="collapse-title text-xl font-medium">Student 1</div>
-            <div class="collapse-content">
-              <p>Content</p>
-            </div>
-          </div>
-          <div class="divider divider-success"></div>
-          <div class="collapse collapse-plus bg-base-200">
-            <input type="radio" name="my-accordion-3" checked="checked" />
-            <div class="collapse-title text-xl font-medium">Student 1</div>
-            <div class="collapse-content">
-              <p>Content</p>
-            </div>
-          </div>
-          <div class="divider divider-success"></div>
-          <div class="collapse collapse-plus bg-base-200">
-            <input type="radio" name="my-accordion-3" checked="checked" />
-            <div class="collapse-title text-xl font-medium">Student 1</div>
-            <div class="collapse-content">
-              <p>Content</p>
-            </div>
-          </div>
-          <div class="divider divider-success"></div>
-          <div class="collapse collapse-plus bg-base-200">
-            <input type="radio" name="my-accordion-3" checked="checked" />
-            <div class="collapse-title text-xl font-medium">Student 1</div>
-            <div class="collapse-content">
-              <p>Content</p>
-            </div>
-          </div>
-          <div class="divider divider-success"></div>
+    <main class="px-3">
+      
+      <dialog id="my_modal_3" class="modal">
+        <div class="modal-box bg-error text-error-content">
+          <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <h3 class="msg-modal font-bold text-xl w-4/5 m-auto text-center">Hello!</h3>
+          <h1 class="hidden bg-info">Just to include bg-info class name</h1>
         </div>
+      </dialog>
 
-        <!-- Right Content -->
-        <div class="flex-1 bg-gray-300 pl-2 flex flex-col justify-between">
-          <!-- Selected Content -->
-          <div class="code basis-2/3 bg-base-100 rounded-lg">Click on a content item to display here</div>
-          <div class="divider m-0.5 divider-success"></div>
-          <div class="execution basis-1/3 bg-base-200 rounded-lg">This part is the results of the execution</div>
+      <section class="assign-info m-6 rounded-xl shadow-lg text-secondary flex flex-row justify-between items-center">
+        <h1 class="text-2xl py-4 text-center">
+          <span class="course-code"><%= course.code %></span> - <%= course.name %>
+        </h1>
+        <h2 class="text-2xl py-2 text-center">
+          <span class="hidden bg-cyan-950 assign-id"><%= assignment.id %></span>Assignment: <%= assignment.name %>
+        </h2>
+        <p class="text-lg px-12 py-4 text-center"><%= assignment.questions.length %> questions</p>
+      </section>
+      <div class="navigator mb-3 flex justify-center gap-20">
+        <div class="navigator-first"><button class="join-item btn btn-ghost">First</button></div>
+        <div class="navigator-btns join">
+          <button class="join-item btn btn-ghost">←</button>
+          <button class="join-item btn text-xl"></button>
+          <button class="join-item btn btn-ghost">→</button>
         </div>
+        <div class="navigator-last"><button class="join-item btn btn-ghost">Last</button></div>
+      </div>
+      <div class="carousel w-full gap-10 overflow-x-hidden">
+        <% assignment.questions.forEach((question, index) => { %>
+         
+          <div class="carousel-item <%= (index === 0) && "carousel-active" %> flex-col w-full">
+            <div>
+              <h1 class="text-center text-2xl">
+                <span data-questionid="<%= question.id %>" class="question-text"><%= question.question %></span></h1>
+            </div>
+            <div class="m-1 border-4 rounded-xl">
+              <div class="flex h-[90vh]">
+                <!-- Left Sidebar -->
+                <div class="basis-1/4 p-4 overflow-y-auto">
+                  <!-- List of Content -->
+                  <% question.submissions.forEach((submission, i) => { %>
+                    <div class="student-card collapse collapse-plus bg-base-200">
+                      <input type="radio" data-studentid="<%= submission.student.id %>" data-submissionid="<%= submission.id %>" class="student-select" name="my-accordion-3" checked="checked" />
+                      <div class="collapse-title text-xl font-medium">
+                        <span class="<student-number"><%= i + 1 %></span>
+                        <span class="<student-name"><%= submission.student.name %></span>
+                      </div>
+                      <div class="collapse-content">
+                        <p><span class="student-id hidden"><%= submission.student.id %></span></p>
+                      </div>
+                    </div>
+                    <div class="divider divider-success"></div>
+                  <% }) %>
+                </div>
+  
+                <!-- Right Content -->
+                <div class="flex-1 bg-gray-300 pl-2 flex flex-col justify-between">
+                  <!-- Selected Content -->
+                  <div class="basis-7/12 bg-black rounded-lg py-4 px-8 overflow-auto"><pre class="code-view text-wrap">Select a student to display code here</pre></div>
+                  <div class="divider m-0.5 divider-success"></div>
+                  <div class="basis-3/12 bg-black rounded-lg py-4 px-8 overflow-auto"><pre class="results-view text-wrap">Click Run to view results of the execution</pre></div>
+                  <div class="divider m-0.5 divider-success"></div>
+                  <div class="basis-2/12 bg-black rounded-lg py-4 px-8 overflow-auto flex justify-center items-center gap-4">
+                    <textarea name="remarks" class="remarks-view textarea textarea-success basis-4/5 h-4/5" placeholder="Remarks go here"></textarea> 
+                    <button type="button" class="send-btn btn btn-success btn-outline basis-1/12 h-4/5">Send</button>
+                    <button type="button" class="run-btn btn btn-success btn-outline basis-1/12 h-4/5">Run</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }) %> 
       </div>
     </main>
     <footer class="py-6">
       <div class="w-1/2 m-auto text-center">Some Copyright content</div>
     </footer>
+    <script src="/src/scripts/evaluate.js"></script>
   </body>
 </html>

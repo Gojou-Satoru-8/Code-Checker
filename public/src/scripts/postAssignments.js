@@ -13,6 +13,16 @@ const html = `<div class="card bg-base-100 shadow-xl">
 </div>
 </div>`;
 
+const showModal = (message, type = "error") => {
+  //   console.log("modal type: ", type);
+  modalMsgEl.textContent = message;
+  if (type === "success") {
+    modalElDiv.classList.remove("bg-error");
+    modalElDiv.classList.add("bg-info");
+  }
+  modalEl.showModal();
+};
+
 numberField.addEventListener("change", (e) => {
   //   console.log(e.target.value);
   const numQuestions = e.target.value;
@@ -39,12 +49,10 @@ submitBtn.addEventListener("click", async (e) => {
   // Validate before http request:
   if (!assignmentName) {
     // alert("Please fill in the Assignment Name");
-    modalMsgEl.textContent = "Please fill in the Assignment Name";
-    modalEl.showModal();
+    showModal("Please fill in the Assignment Name");
   } else if (questions.length === 0) {
     // alert("Please enter at least one question");
-    modalMsgEl.textContent = "Please enter at least one question";
-    modalEl.showModal();
+    showModal("Please enter at least one question");
   }
   // Make http request:
   else {
@@ -57,16 +65,13 @@ submitBtn.addEventListener("click", async (e) => {
       console.log(response);
       const results = await response.json();
       console.log(results);
-      modalMsgEl.textContent = results.message;
-      modalEl.showModal();
-      if (results.status === "success") {
-        modalElDiv.classList.remove("bg-error");
-        modalElDiv.classList.add("bg-info");
+      if (results.status !== "success") showModal(results.message);
+      else {
+        showModal(results.message, "success");
         setTimeout(() => {
           results.redirectUrl && location.assign(results.redirectUrl);
         }, 1000);
       }
-      // setTimeout()
     } catch (err) {
       console.log(err);
     }

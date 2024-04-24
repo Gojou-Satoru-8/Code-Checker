@@ -11,12 +11,29 @@
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
   }
+
+  main,
+  footer {
+    animation: moveUp ease 0.75s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+  }
+
   @keyframes fadeInAnimation {
     0% {
       opacity: 0;
     }
     100% {
       opacity: 1;
+    }
+  }
+
+  @keyframes moveUp {
+    0% {
+      transform: translateY(5%);
+    }
+    100% {
+      transform: translateY(0);
     }
   }
 }
