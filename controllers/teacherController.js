@@ -40,7 +40,7 @@ exports.getCourseAssignments = catchAsync(async (req, res, next) => {
   //   teacher: req.teacher,
   //   course,
   // });
-  res.render("assignments.ejs", { teacher, course: course });
+  res.status(200).render("assignments.ejs", { teacher, course: course });
   // TODO: Might need to rethink what data is being sent for rendering, since as (1) whole teacher object is unused
   // (2) furthermore, assignments is the real requirement here.
 });

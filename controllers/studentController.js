@@ -35,6 +35,7 @@ const upload = multer({
   // fileFilter: multerFilter,  // NOTE: The filtering functionality is added on the client side.
 });
 
+// ROUTE: /students/courses/:course_code/assignments/:assign_id (POST)
 exports.uploadFiles = upload.array("codeFiles");
 
 // ROUTE: /students/home
@@ -72,7 +73,7 @@ exports.getCourseAssignments = catchAsync(async (req, res, next) => {
   //   student: req.student,
   //   course: course,
   // });
-  res.render("assignments.ejs", { student, course: course });
+  res.status(200).render("assignments.ejs", { student, course: course });
   // TODO: Might need to rethink what data is being sent for rendering, since as (1) whole student object is unused
   // (2) furthermore, assignments is the real requirement here.
 });
@@ -177,6 +178,7 @@ exports.postAssignmentSolutions = catchAsync(async (req, res, next) => {
   });
 });
 
+// ROUTE: /students/submissions
 exports.viewAllSubmissionsByStudent = catchAsync(async (req, res, next) => {
   const submissions = await Submission.find({ student: req.student.id });
   console.log(submissions);
@@ -186,6 +188,7 @@ exports.viewAllSubmissionsByStudent = catchAsync(async (req, res, next) => {
   });
 });
 
+// ROUTE: /students/submissions/:submissionId - used by teachers to get student submissions in evaluate page
 exports.viewSubmissionByStudent = catchAsync(async (req, res, next) => {
   const submission = await Submission.findById(req.params.submissionId);
   if (!submission) throw new AppError("No such submission with this ID", 404, "JSON");
@@ -208,6 +211,7 @@ exports.viewSubmissionByStudent = catchAsync(async (req, res, next) => {
   });
 });
 
+// ROUTE: /students/submissions/:submissionId (PATCH) - used by teachers to write or update remarks for submission
 exports.updateRemarks = catchAsync(async (req, res, next) => {
   console.log("PATCH remarks: ", req.body);
 
@@ -227,7 +231,10 @@ exports.updateRemarks = catchAsync(async (req, res, next) => {
     data: submission,
   });
 });
-// exports.viewSubmissionById (name if using submissionId in req.params)
+
+// ROUTE: /students/:studentId/submissions/:questionId - used to send file of existing submission
+// in upload assignments page
+// exports.viewSubmissionById (name of handler if using submissionId in req.params)
 exports.viewSubmissionByStudentAndQuestion = catchAsync(async (req, res, next) => {
   // const submission = await Submission.findById(req.params.submissionId);
   const submission = await Submission.findOne({ student: req.params.studentId, question: req.params.questionId });
@@ -244,7 +251,9 @@ exports.viewSubmissionByStudentAndQuestion = catchAsync(async (req, res, next) =
   // Both produce (download) effect, except sendFile instructs browsers to present supported file types
 });
 
-// deleteSubmissionById (name if using submissionId in req.params)
+// ROUTE: /students/:studentId/submissions/:questionId - used to delete existing submission in upload assignments
+// page
+// deleteSubmissionById (name of handler if using submissionId in req.params)
 exports.deleteSubmissionByStudentAndQuestion = catchAsync(async (req, res, next) => {
   // const submission = await Submission.findByIdAndDelete(req.params.submissionId);
   const submission = await Submission.findOne({ student: req.params.studentId, question: req.params.questionId });

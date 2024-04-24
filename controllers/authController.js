@@ -23,21 +23,21 @@ const respondWithCookie = (res, statusCode, cookie, data) => {
   res.status(statusCode).json({ status: "success", message: "Logged in!", ...data });
 };
 
-exports.getStudentLogin = catchAsync(async (req, res, next) => {
+exports.getStudentLogin = (req, res, next) => {
   // If student is already logged in :)
   console.log("Get login triggered");
 
   if (req.cookies.jwt_student) res.status(302).redirect("/students/home");
   //   Or res.status(302).set({ Location: "/students/home" });
-  else res.render("login.ejs");
-});
+  else res.status(200).render("login.ejs");
+};
 
-exports.getTeacherLogin = catchAsync(async (req, res, next) => {
+exports.getTeacherLogin = (req, res, next) => {
   // If teacher is already logged in :)
   if (req.cookies.jwt_teacher) res.status(302).redirect("/teachers/home");
   //   Or res.status(302).set({ Location: "/students/home" });
-  else res.render("login.ejs");
-});
+  else res.status(200).render("login.ejs");
+};
 
 exports.postStudentLogin = catchAsync(async (req, res, next) => {
   console.log("Post login triggered with: ", req.body);
