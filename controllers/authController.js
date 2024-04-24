@@ -153,3 +153,15 @@ exports.protectTeacher = catchAsync(async (req, res, next) => {
   req.teacher = teacher;
   next();
 });
+
+// ROUTE: /teachers/logout and /students/logout
+exports.logout = (req, res, next) => {
+  // This middleware will be preceded by either protectStudent() or protectTeacher()
+  const user = req.teacher ? "teacher" : "student";
+  res.cookie(`jwt_${user}`, "logged_out", {
+    maxAge: 0, // We overwrite the cookie with any value, and (most importantly) let it expire immediately.
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+  });
+  res.status(302).redirect(`/${user}s/login`);
+};

@@ -1,5 +1,6 @@
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs/promises");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const Submission = require("../models/Submission");
@@ -176,14 +177,56 @@ exports.postAssignmentSolutions = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.viewSubmissionsByStudent = catchAsync(async (req, res, next) => {
+exports.viewAllSubmissionsByStudent = catchAsync(async (req, res, next) => {
   const submissions = await Submission.find({ student: req.student.id });
   console.log(submissions);
   res.status(200).json({
+    status: "success",
     data: submissions,
   });
 });
 
+exports.viewSubmissionByStudent = catchAsync(async (req, res, next) => {
+  const submission = await Submission.findById(req.params.submissionId);
+  if (!submission) throw new AppError("No such submission with this ID", 404, "JSON");
+  // console.log(req.query.fileContents, typeof req.query.fileContents);
+  // NOTE: Even boolean values sent via fetch are converted to string once urlencoded, as seen in req.query.
+  let fileContents;
+
+  if (req.query.fileContents) {
+    fileContents = await fs.readFile(`${__dirname}/../public/code-uploads/${submission.filePath}`, {
+      encoding: "utf-8",
+    });
+  }
+
+  console.log(fileContents);
+
+  // if (fileContents) submission.fileContents = fileContents;
+  res.status(200).json({
+    status: "success",
+    data: { submission: { ...submission, fileContents } },
+  });
+});
+
+exports.updateRemarks = catchAsync(async (req, res, next) => {
+  console.log("PATCH remarks: ", req.body);
+
+  if (!req.body.remarks) throw new AppError("No remarks given!", 404, "JSON");
+
+  const submission = await Submission.findByIdAndUpdate(
+    req.params.submissionId,
+    { remarks: req.body.remarks },
+    { new: true, runValidators: true },
+  );
+
+  if (!submission) throw new AppError("No such submission with this ID", 404, "JSON");
+
+  res.status(200).json({
+    status: "success",
+    message: "updated successfully",
+    data: submission,
+  });
+});
 // exports.viewSubmissionById (name if using submissionId in req.params)
 exports.viewSubmissionByStudentAndQuestion = catchAsync(async (req, res, next) => {
   // const submission = await Submission.findById(req.params.submissionId);

@@ -6,6 +6,7 @@ const studentController = require("../controllers/studentController");
 const router = express.Router({ mergeParams: true });
 
 router.route("/login").get(authController.getStudentLogin).post(authController.postStudentLogin);
+router.route("/logout").get(authController.protectStudent, authController.logout);
 router.get("/home", authController.protectStudent, studentController.getStudentHome);
 // router.use("/courses", authController.protectStudent, courseRouter);
 // NOTE: Setting the authController.protectStudent here and not inside courseRouter because for route "/",
@@ -23,9 +24,15 @@ router
   .get(authController.protectStudent, studentController.getAssignmentQuestions)
   .post(authController.protectStudent, studentController.uploadFiles, studentController.postAssignmentSolutions);
 
-router.route("/all-submissions").get(authController.protectStudent, studentController.viewSubmissionsByStudent);
+router.route("/submissions").get(authController.protectStudent, studentController.viewAllSubmissionsByStudent);
+
+// NOTE: Following route will be used by teachers to: (1) GET - get student submissions in evaluate page,
+//  (2) PATCH - write or update remarks for these submissions.
 router
-  // .route("/submissions/:submissionId")
+  .route("/submissions/:submissionId")
+  .get(authController.protectTeacher, studentController.viewSubmissionByStudent)
+  .patch(authController.protectTeacher, studentController.updateRemarks);
+router
   .route("/:studentId/submissions/:questionId")
   .get(authController.protectStudent, studentController.viewSubmissionByStudentAndQuestion)
   .delete(authController.protectStudent, studentController.deleteSubmissionByStudentAndQuestion);

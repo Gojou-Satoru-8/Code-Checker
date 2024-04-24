@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 app.use("/students", studentRouter);
 app.use("/teachers", teacherRouter);
-app.route("/api/v1/codes").get(codeController.allCodes).post(codeController.postCode);
+app.route("/api/v1/codes/:submissionId?").get(codeController.getCodes).post(codeController.postCode);
 // app.use("/flash", flashHandler);
 
 // Ignore favicon.ico request (otherwise creates errors in console)

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-const Course = require("./Course");
+// const Course = require("./Course");
 const teacherSchema = new mongoose.Schema(
   {
     name: {

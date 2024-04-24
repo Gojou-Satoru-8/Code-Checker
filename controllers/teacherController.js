@@ -100,21 +100,27 @@ exports.redirectToCourse = (req, res, next) => {
 // ROUTE: /teachers/courses/:course_code/assignments/:assign_id
 exports.getAssignmentQuestions = catchAsync(async (req, res, next) => {
   const teacher = req.teacher;
-  const course_code = req.params.course_code;
+  const { course_code, assign_id } = req.params;
 
   const course = teacher.courses.find((course) => course.code === course_code);
-  await course.populate("assignments");
+  // await course.populate("assignments");  // NOTE: No need to popualte all the assignments
   // console.log(course.assignments);
+  // const assignment = course.assignments.find((assignment) => assignment.id === assign_id);
 
-  const assignment = course.assignments.find((assignment) => assignment.id === req.params.assign_id);
-  // console.log(assignment);
+  const assignment = await Assignment.findById(assign_id);
+  console.log(assignment);
+  for (const question of assignment.questions) {
+    await question.populate("submissions");
+    console.log(question.submissions);
+  }
+  // console.log(assignment.questions);
 
   // res.status(200).json({
   //   status: "success",
   //   data: { course, assignment },
   // });
-  res.status(200).render("upload_assignments.ejs", {
-    course: { name: course.name, code: course_code, teacher: teacher.name },
+  res.status(200).render("evaluate.ejs", {
+    course: { name: course.name, code: course_code },
     assignment,
   });
 });

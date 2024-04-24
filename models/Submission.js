@@ -17,7 +17,8 @@ const submissionSchema = new mongoose.Schema({
   },
   remarks: {
     type: String,
-    maxLength: [30, "Remarks must be 30 characters at max"],
+    trim: true,
+    maxLength: [100, "Remarks must be 100 characters at max"],
   },
   createdAt: {
     type: Date,
