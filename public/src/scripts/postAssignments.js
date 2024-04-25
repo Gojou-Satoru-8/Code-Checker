@@ -26,13 +26,13 @@ const showModal = (message, type = "error") => {
 numberField.addEventListener("change", (e) => {
   //   console.log(e.target.value);
   const numQuestions = e.target.value;
-  const questionFields = [...form.children];
+  const questionFields = [...loginForm.children];
   //   const questionFieldHTML = questionFields.at(0);
   //   console.log(questionFieldHTML);
 
   if (numQuestions > 0) {
     questionFields.forEach((element) => element.remove());
-    for (let i = 1; i <= numQuestions; i++) form.insertAdjacentHTML("beforeend", html.replaceAll("#", `${i}`));
+    for (let i = 1; i <= numQuestions; i++) loginForm.insertAdjacentHTML("beforeend", html.replaceAll("#", `${i}`));
   }
 });
 

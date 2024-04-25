@@ -7,7 +7,7 @@ const notifyAndDisappear = (alertElement, message) => {
   }, 10000);
 };
 
-const form = document.querySelector("form");
+const loginForm = document.querySelector("form");
 
 // BUTTONS:
 const submitBtn = document.querySelector(".submit-btn");
@@ -53,7 +53,7 @@ submitBtn.addEventListener("click", async (e) => {
   const files = [];
   const errors = [];
 
-  const inputFormData = new FormData(form);
+  const inputFormData = new FormData(loginForm);
   //   for (const [name, val] of inputFormData) console.log(name, val);
   // Here, name is the question.id and val is the file selected for upload
   for (const [questionID, file] of inputFormData) {
