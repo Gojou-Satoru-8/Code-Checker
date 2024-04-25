@@ -7,6 +7,9 @@ const router = express.Router({ mergeParams: true });
 
 router.route("/login").get(authController.getStudentLogin).post(authController.postStudentLogin);
 router.route("/logout").get(authController.protectStudent, authController.logout);
+router.route("/forgot-password").post(authController.forgotPassword);
+router.route("/reset-password/:token").get(authController.getResetPasswordPage).patch(authController.resetPassword);
+
 router.get("/home", authController.protectStudent, studentController.getStudentHome);
 // router.use("/courses", authController.protectStudent, courseRouter);
 // NOTE: Setting the authController.protectStudent here and not inside courseRouter because for route "/",
