@@ -1817,6 +1817,29 @@ main,
   justify-self: end;
 }
 
+.mockup-code{
+  position: relative;
+  overflow: hidden;
+  overflow-x: auto;
+  min-width: 18rem;
+  border-radius: var(--rounded-box, 1rem);
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-n,oklch(var(--n)/var(--tw-bg-opacity)));
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  --tw-text-opacity: 1;
+  color: var(--fallback-nc,oklch(var(--nc)/var(--tw-text-opacity)));
+  direction: ltr;
+}
+
+.mockup-code pre[data-prefix]:before{
+  content: attr(data-prefix);
+  display: inline-block;
+  text-align: right;
+  width: 2rem;
+  opacity: 0.5;
+}
+
 .modal{
   pointer-events: none;
   position: fixed;
@@ -2786,6 +2809,28 @@ details.collapse summary::-webkit-details-marker{
   margin-top: 0;
 }
 
+.mockup-code:before{
+  content: "";
+  margin-bottom: 1rem;
+  display: block;
+  height: 0.75rem;
+  width: 0.75rem;
+  border-radius: 9999px;
+  opacity: 0.3;
+  box-shadow: 1.4em 0,
+        2.8em 0,
+        4.2em 0;
+}
+
+.mockup-code pre{
+  padding-right: 1.25rem;
+}
+
+.mockup-code pre:before{
+  content: "";
+  margin-right: 2ch;
+}
+
 .mockup-phone .display{
   overflow: hidden;
   border-radius: 40px;
@@ -3007,6 +3052,26 @@ details.collapse summary::-webkit-details-marker{
   padding-right: 0.313rem;
 }
 
+.btm-nav-xs .btm-nav-label{
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.btm-nav-sm .btm-nav-label{
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.btm-nav-md .btm-nav-label{
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.btm-nav-lg .btm-nav-label{
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
 .btn-sm{
   height: 2rem;
   min-height: 2rem;
@@ -3015,9 +3080,23 @@ details.collapse summary::-webkit-details-marker{
   font-size: 0.875rem;
 }
 
+.btn-lg{
+  height: 4rem;
+  min-height: 4rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  font-size: 1.125rem;
+}
+
 .btn-square:where(.btn-sm){
   height: 2rem;
   width: 2rem;
+  padding: 0px;
+}
+
+.btn-square:where(.btn-lg){
+  height: 4rem;
+  width: 4rem;
   padding: 0px;
 }
 
@@ -3380,6 +3459,14 @@ details.collapse summary::-webkit-details-marker{
   margin-top: 15%;
 }
 
+.mt-\[25\%\]{
+  margin-top: 25%;
+}
+
+.mt-\[20\%\]{
+  margin-top: 20%;
+}
+
 .block{
   display: block;
 }
@@ -3426,6 +3513,26 @@ details.collapse summary::-webkit-details-marker{
 
 .h-\[90vh\]{
   height: 90vh;
+}
+
+.h-\[100vh\]{
+  height: 100vh;
+}
+
+.h-1\/2{
+  height: 50%;
+}
+
+.h-\[50vh\]{
+  height: 50vh;
+}
+
+.h-8{
+  height: 2rem;
+}
+
+.h-7{
+  height: 1.75rem;
 }
 
 .min-h-\[20vh\]{
@@ -3522,6 +3629,22 @@ details.collapse summary::-webkit-details-marker{
 
 .w-\[95\%\]{
   width: 95%;
+}
+
+.w-\[100vw\]{
+  width: 100vw;
+}
+
+.w-8{
+  width: 2rem;
+}
+
+.w-7{
+  width: 1.75rem;
+}
+
+.w-10{
+  width: 2.5rem;
 }
 
 .max-w-max{
@@ -3799,6 +3922,11 @@ details.collapse summary::-webkit-details-marker{
   background-color: var(--fallback-in,oklch(var(--in)/var(--tw-bg-opacity)));
 }
 
+.bg-red-100{
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 226 226 / var(--tw-bg-opacity));
+}
+
 .stroke-current{
   stroke: currentColor;
 }
@@ -3948,6 +4076,16 @@ details.collapse summary::-webkit-details-marker{
 .text-success{
   --tw-text-opacity: 1;
   color: var(--fallback-su,oklch(var(--su)/var(--tw-text-opacity)));
+}
+
+.text-red-100{
+  --tw-text-opacity: 1;
+  color: rgb(254 226 226 / var(--tw-text-opacity));
+}
+
+.text-red-800{
+  --tw-text-opacity: 1;
+  color: rgb(153 27 27 / var(--tw-text-opacity));
 }
 
 .opacity-70{

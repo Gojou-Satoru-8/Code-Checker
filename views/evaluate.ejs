@@ -8,73 +8,8 @@
     <link rel="stylesheet" href="/src/styles/output.css" />
   </head>
   <body>
-    <header class="mx-5 my-5">
-      <div class="navbar bg-white text-black rounded-full shadow-sm">
-        <div class="navbar-start">
-          <div class="dropdown">
-            <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
-              </svg>
-            </div>
-            <ul
-              tabindex="0"
-              class="menu menu-sm text-white dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-            >
-              <li><a>Homepage</a></li>
-              <li><a>Portfolio</a></li>
-              <li><a>About</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="navbar-center">
-          <a class="btn btn-ghost text-xl">Nav bar</a>
-        </div>
-        <div class="navbar-end">
-          <button class="btn btn-ghost btn-circle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
-          <button class="btn btn-ghost btn-circle">
-            <div class="indicator">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                />
-              </svg>
-              <span class="badge badge-xs badge-primary indicator-item"></span>
-            </div>
-          </button>
-        </div>
-      </div>
-    </header>
+    
+    <%- include("./partials/header") %>
 
     <main class="px-3">
       
@@ -137,9 +72,9 @@
                 <!-- Right Content -->
                 <div class="flex-1 bg-gray-300 pl-2 flex flex-col justify-between">
                   <!-- Selected Content -->
-                  <div class="basis-7/12 bg-black rounded-lg py-4 px-8 overflow-auto"><pre class="code-view text-wrap">Select a student to display code here</pre></div>
+                  <div class="mockup-code basis-7/12 bg-black rounded-lg py-4 px-8 overflow-auto"><pre class="code-view text-wrap">Select a student to display code here</pre></div>
                   <div class="divider m-0.5 divider-success"></div>
-                  <div class="basis-3/12 bg-black rounded-lg py-4 px-8 overflow-auto"><pre class="results-view text-wrap">Click Run to view results of the execution</pre></div>
+                  <div class="mockup-code basis-3/12 bg-black rounded-lg py-4 px-8 overflow-auto"><pre class="results-view text-wrap">Click Run to view results of the execution</pre></div>
                   <div class="divider m-0.5 divider-success"></div>
                   <div class="basis-2/12 bg-black rounded-lg py-4 px-8 overflow-auto flex justify-center items-center gap-4">
                     <textarea name="remarks" class="remarks-view textarea textarea-success basis-4/5 h-4/5" placeholder="Remarks go here"></textarea> 
@@ -153,9 +88,6 @@
         <% }) %> 
       </div>
     </main>
-    <footer class="py-6">
-      <div class="w-1/2 m-auto text-center">Some Copyright content</div>
-    </footer>
     <script src="/src/scripts/evaluate.js"></script>
   </body>
 </html>

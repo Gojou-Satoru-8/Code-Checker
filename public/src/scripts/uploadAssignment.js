@@ -1,6 +1,7 @@
 const notifyAndDisappear = (alertElement, message) => {
   const alertMsgElement = [...alertElement.children].at(-1);
   alertMsgElement.textContent = message;
+  infoAlert.classList.add("hidden");
   alertElement.classList.remove("hidden");
   setTimeout(() => {
     alertElement.classList.add("hidden");
@@ -16,12 +17,14 @@ const viewDeleteBtnsDivs = [...document.querySelectorAll(".view-delete-btns")];
 // ALERTS:
 const successAlert = document.querySelector(".alert-success");
 const errorAlert = document.querySelector(".alert-error");
+const infoAlert = document.querySelector(".alert-info");
 
 // Text from HTML:
 const courseCode = document.querySelector(".course-code").textContent.trim();
 const assignmentID = document.querySelector(".assign-id").textContent.trim();
 
-const acceptedFileExtensions = ["py", "c", "cpp", "js"];
+// const acceptedFileExtensions = ["py", "c", "cpp", "js"];
+const acceptedFileExtensions = ["py", "js"];
 
 const addDeletionBehaviour = function () {
   viewDeleteBtnsDivs.forEach((div) => {
@@ -31,16 +34,22 @@ const addDeletionBehaviour = function () {
 
       // NOTE: HTML attributes are always converted to lower case.
       const { studentid, questionid } = e.target.dataset;
-      const response = await fetch(`/students/${studentid}/submissions/${questionid}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      console.log(response);
-      //   const results = await response.json();   // causes error since status code 204 sends no content
-      //   console.log(results);
-      if (response.status === 204) {
-        notifyAndDisappear(successAlert, "Deleted Successfully");
-        div.classList.add("hidden");
+      try {
+        infoAlert.classList.remove("hidden");
+        const response = await fetch(`/students/${studentid}/submissions/${questionid}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+        console.log(response);
+        //   const results = await response.json();   // causes error since status code 204 sends no content
+        //   console.log(results);
+        if (response.status === 204) {
+          notifyAndDisappear(successAlert, "Deleted Successfully");
+          div.classList.add("hidden");
+        }
+      } catch (err) {
+        console.log(err.message);
+        notifyAndDisappear(errorAlert, "Unable to complete operation due to Network Issues!");
       }
     });
   });
@@ -77,10 +86,7 @@ submitBtn.addEventListener("click", async (e) => {
   // NOTE: errors: array of those files (old file names) which had invalid extensions
 
   if (errors.length != 0) {
-    notifyAndDisappear(
-      errorAlert,
-      `Problems with these files: ${errors.join(", ")}. Accepted file types: .py, .js, .cpp, .c`,
-    );
+    notifyAndDisappear(errorAlert, `Problems with these files: ${errors.join(", ")}. Accepted file types: .py, .js`);
   }
 
   if (files.length != 0) {
@@ -90,6 +96,7 @@ submitBtn.addEventListener("click", async (e) => {
     for (const [name, file] of uploadFormData) console.log(name, file);
 
     try {
+      infoAlert.classList.remove("hidden");
       const response = await fetch(`/students/courses/${courseCode}/assignments/${assignmentID}`, {
         method: "POST",
         //   headers: { "Content-Type": "multipart/form-data" },

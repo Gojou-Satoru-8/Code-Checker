@@ -4,6 +4,7 @@ const fs = require("fs/promises");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const Submission = require("../models/Submission");
+const Assignment = require("../models/Assignment");
 
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -89,11 +90,12 @@ exports.getAssignmentQuestions = catchAsync(async (req, res, next) => {
   const { course_code, assign_id } = req.params;
 
   const course = student.courses.find((course) => course.code === course_code);
-  await course.populate("assignments");
+  // await course.populate("assignments");  // NOTE: No need to populate all the assignments
   // console.log(course.assignments);
+  // const assignment = course.assignments.find((assignment) => assignment.id === assign_id);
 
-  const assignment = course.assignments.find((assignment) => assignment.id === assign_id);
-  // console.log(assignment);
+  const assignment = await Assignment.findById(assign_id);
+  console.log(assignment);
 
   // Find existing submission by students for each question inside the assignment:
   for (const question of assignment.questions) {
