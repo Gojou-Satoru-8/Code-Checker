@@ -33,6 +33,7 @@ const studentSchema = new mongoose.Schema(
         ref: "Course",
       },
     ],
+    photo: { type: String, default: "/src/assets/account-image.png" },
     password: {
       type: String,
       required: [true, "Password is a mandatory field"],
@@ -74,7 +75,7 @@ studentSchema.virtual("submissions", {
 
 // SCHEMA METHODS:
 studentSchema.methods.isPasswordCorrect = async function (password) {
-  // console.log(this);
+  console.log(this, "Given password: ", password);
   return await bcrypt.compare(password, this.password);
 };
 

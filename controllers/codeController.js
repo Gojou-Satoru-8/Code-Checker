@@ -50,6 +50,7 @@ exports.getCodes = catchAsync(async (req, res, next) => {
   });
 });
 
+// API Testing (POSTMAN) Only:
 exports.postCode = (req, res, next) => {
   const { lang, source } = req.body;
 

@@ -5,10 +5,24 @@ const studentController = require("../controllers/studentController");
 
 const router = express.Router({ mergeParams: true });
 
+router.route("/").get(studentController.redirectToStudentHome);
+// NOTE: No need of authController.protectStudent in routes where redirection occurs to a route that already has
+// that middleware (/teachers/home, for example)
+router.route("/me").get(authController.protectStudent, authController.me);
 router.route("/login").get(authController.getStudentLogin).post(authController.postStudentLogin);
 router.route("/logout").get(authController.protectStudent, authController.logout);
+
 router.route("/forgot-password").post(authController.forgotPassword);
 router.route("/reset-password/:token").get(authController.getResetPasswordPage).patch(authController.resetPassword);
+router.route("/update-password").patch(authController.protectStudent, authController.updatePassword);
+router
+  .route("/update-pfp")
+  .patch(
+    authController.protectStudent,
+    authController.uploadPfp,
+    authController.resizeUserPhoto,
+    authController.updatePfp,
+  );
 
 router.get("/home", authController.protectStudent, studentController.getStudentHome);
 // router.use("/courses", authController.protectStudent, courseRouter);
@@ -17,7 +31,7 @@ router.get("/home", authController.protectStudent, studentController.getStudentH
 // Setting protectStudent will redirect to /students/login for students as well as teachers if not logged in
 // Setting protectTeacher will redirect to /teachers/login for teachers as well as students if not logged in
 
-router.get("/courses", authController.protectStudent, studentController.getAllCoursesTaken);
+router.get("/courses", studentController.redirectToStudentHome);
 router.get("/courses/:course_code", authController.protectStudent, studentController.getCourseAssignments);
 
 // NOTE: Following route essentially redirects to /courses/:course_code, using the same middleware

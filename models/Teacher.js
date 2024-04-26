@@ -24,6 +24,7 @@ const teacherSchema = new mongoose.Schema(
         message: ["Role must be any one of 'admin' or 'teacher'"],
       },
     },
+    photo: { type: String, default: "/src/assets/account-image.png" },
     password: {
       type: String,
       required: [true, "Password is a mandatory field"],

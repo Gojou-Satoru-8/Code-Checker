@@ -18,6 +18,11 @@
           <p class="text-lg px-12 text-primary-content">This course is taught by <%= course.teacher.name %></p>
         <% } %>
         <p class="text-lg px-12 text-primary-content">This course has <%= course.assignments.length %> assignments</p>
+        <% if (locals.teacher) { %>
+          <div class="w-max mx-auto my-2">
+            <a href="/teachers/courses/<%= course.code %>/new-assignment"><button type="button" class="btn btn-primary">New Assignment</button></a>
+          </div>
+        <% } %>
       </section>
       <section
         class="courses mx-4 mb-8 grid grid-cols-[45%_45%] md:grid-cols-[30%_30%_30%] grid-rows-2 auto-rows-fr gap-12 justify-center"

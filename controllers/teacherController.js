@@ -18,7 +18,7 @@ exports.getTeacherHome = (req, res, next) => {
 };
 
 // ROUTE: /teachers/courses
-exports.getAllCoursesTaught = (req, res, next) => {
+exports.redirectToTeacherHome = (req, res, next) => {
   // No dedicated courses page has been defined, since the home page suffices for now.
   res.redirect("/teachers/home");
 };

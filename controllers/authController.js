@@ -6,6 +6,49 @@ const Course = require("../models/Course");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const sendMail = require("../utils/sendMail");
+const multer = require("multer");
+const sharp = require("sharp");
+const path = require("path");
+
+const multerFilter = (req, file, cb) => {
+  console.log("------------- Multer Filter middleware:");
+  console.log({ file });
+
+  if (file.mimetype.startsWith("image")) cb(null, true);
+  else {
+    console.log("Image unaccepted for this file: ", file);
+    cb(new AppError("Unaccepted File type", 400, "JSON"), false);
+  }
+};
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  fileFilter: multerFilter,
+});
+
+exports.uploadPfp = upload.single("pfp");
+
+exports.resizeUserPhoto = (req, res, next) => {
+  // As only a single file was uploaded, it's available in req.file, in case of multiple uploads, it's req.files.
+  console.log("Photo: ", req.file);
+  if (!req.file) throw new AppError("No photo uploaded", 400, "JSON");
+
+  const user = req.student || req.teacher;
+  const userType = req.student ? "student" : "teacher";
+  // NOTE: Since we're using memoryStorage(), thus there is no filename appended to file Object,
+  // as done by filename middleware in diskstorage() options. Thus we gotta set it manually.
+  // const fileExt = req.file.mimetype.split("/").at(-1);
+  // req.file.filename = `user-${user.id}-${req.file.originalname}.${fileExt}`;
+  req.file.filename = `${userType}-${user.id}.jpeg`;
+  // NOTE: Extension is fixed to jpeg as we're saving as jpeg after processing via sharp.
+  // console.log("File Before resizing: ", req.file);
+  sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(path.resolve(__dirname, "..", "public/user-images", req.file.filename));
+  next();
+};
 
 const signToken = (id) => {
   const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
@@ -187,7 +230,7 @@ exports.logout = (req, res, next) => {
   res.status(302).redirect(`/${user}s/login`);
 };
 
-// ROUTE: /students/forgot-password /teachers/forgot-password (POST)
+// ROUTE: /students/forgot-password and /teachers/forgot-password (POST)
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   // This middleware will generate a reset-password-token, which is part of the reset-password-URL, sent by email
   const userType = req.originalUrl.includes("students") ? "student" : "teacher";
@@ -225,7 +268,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
-// ROUTE: /students/reset-password/:token
+// ROUTE: /students/reset-password/:token and /teachers/reset-password/:token
 exports.getResetPasswordPage = catchAsync(async (req, res, next) => {
   const userType = req.originalUrl.includes("students") ? "Student" : "Teacher";
   const Model = userType === "Student" ? Student : Teacher;
@@ -251,10 +294,10 @@ exports.getResetPasswordPage = catchAsync(async (req, res, next) => {
   res.status(200).render("resetPassword.ejs", { userType });
 });
 
-// ROUTE: /students/reset-password/:token (PATCH)
+// ROUTE: /students/reset-password/:token and /teachers/reset-password/:token (PATCH)
 exports.resetPassword = catchAsync(async (req, res, next) => {
   const { token } = req.params;
-  const { password, passwordConfirm } = req.body;
+  const { password } = req.body;
   // (1) Hash the token from the URL
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
@@ -288,4 +331,61 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     { name: `jwt_${userType}`, value: signInToken },
     { message: "Password Reset Successfuly... You're Logged In!", redirectURL: `/${userType}s/home` },
   );
+});
+
+// ROUTE: /students/me and /teachers/me
+exports.me = (req, res, next) => {
+  // const userType = req.student ? "student" : "teacher";
+  // const user = req.student || req.teacher;
+  // res.status(200).json({ status: "success", user: Object.assign({ type: userType }, user) });
+  // let user; // OR:
+  // if (req.student) user = { type: "student", ...req.student };
+  // else user = { type: "teacher", ...req.teacher };
+  // res.status(200).json({ status: "success", user });
+  // NOTE: Spreading the req.student or req.teacher object, or using Object.assign() provides a lot more fields
+  // on the user Object which disrupt the normal access pattern of properties. Uncomment to see the json response.
+  console.log(req.student);
+
+  if (req.student) res.status(200).render("me.ejs", { student: req.student });
+  else if (req.teacher) res.status(200).render("me.ejs", { teacher: req.teacher });
+};
+
+// ROUTE: /students/update-password and /teachers/update-password
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  let user = req.student || req.teacher;
+  const userType = req.student ? "student" : "teacher";
+  const Model = req.student ? Student : Teacher;
+  const { passwordCurrent, passwordNew } = req.body;
+  console.log(passwordCurrent, passwordNew);
+
+  // Re-quering for the user, so as to get the password field this time
+  user = await Model.findById(user.id).select("+password");
+
+  const isPasswordMatch = await user.isPasswordCorrect(passwordCurrent);
+  if (!isPasswordMatch) throw new AppError("Wrong password", 401, "JSON");
+  // console.log("Password Matched");
+
+  user.password = passwordNew;
+  await user.save({ validateBeforeSave: true });
+
+  const signInToken = signToken(user.id);
+  respondWithCookie(
+    res,
+    200,
+    { name: `jwt_${userType}`, value: signInToken },
+    { message: "Password Updated Successfuly!", redirectURL: `/${userType}s/home` },
+  );
+});
+
+exports.updatePfp = catchAsync(async (req, res, next) => {
+  console.log("User: ", req.file); // Has filename attribute crucially.
+  const user = req.student || req.teacher;
+  const userType = req.student ? "student" : "teacher";
+  const Model = req.student ? Student : Teacher;
+  const updatedUser = await Model.findByIdAndUpdate(
+    user.id,
+    { photo: req.file.filename },
+    { new: true, runValidators: true },
+  );
+  res.status(200).json({ status: "success", message: "Pfp Changed Successfully" });
 });

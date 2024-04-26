@@ -9,26 +9,18 @@ const Assignment = require("../models/Assignment");
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     // console.log("------------- Multer diskStorage destination middleware:");
-    console.log(file);
+    console.log({ file });
     cb(null, `${__dirname}/../public/code-uploads`);
   },
   filename: (req, file, cb) => {
     // console.log("------------- Multer diskStorage fileName middleware:");
-    // console.log(file);
+    // console.log({ file });
     const fileExt = file.mimetype.split("/").at(-1);
     console.log(`${req.student.id}-${file.originalname}.${fileExt}`);
 
     cb(null, `${req.student.id}-${file.originalname}`);
   },
 });
-
-// const multerFilter = (req, file, cb) => {
-//   // if file.mime
-//   console.log("------------- Multer Filter middleware:");
-//   console.log(file);
-
-//   cb(null, true);
-// };
 
 const upload = multer({
   storage: multerStorage,
@@ -52,7 +44,7 @@ exports.getStudentHome = (req, res, next) => {
 };
 
 // ROUTE: /students/courses
-exports.getAllCoursesTaken = (req, res, next) => {
+exports.redirectToStudentHome = (req, res, next) => {
   // No dedicated courses page has been defined, since the home page suffices for now.
   res.redirect("/students/home");
 };

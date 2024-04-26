@@ -125,7 +125,7 @@ submitBtn.addEventListener("click", async (e) => {
           //   console.log("--------------------------");
 
           div.classList.remove("hidden");
-          const [viewBtn, deleteBtn] = [...div.children];
+          const [, viewBtn, deleteBtn] = [...div.children];
           viewBtn.firstElementChild.setAttribute("href", `/students/${results.studentId}/submissions/${questionId}`);
           deleteBtn.dataset.studentId = results.studentId;
           deleteBtn.dataset.questionId = questionId;

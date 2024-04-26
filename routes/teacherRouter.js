@@ -5,14 +5,28 @@ const teacherController = require("../controllers/teacherController");
 
 const router = express.Router({ mergeParams: true });
 
+router.route("/").get(teacherController.redirectToTeacherHome);
+// NOTE: No need of authController.protectTeacher in routes where redirection occurs to a route that already has
+// that middleware (/teachers/home, for example)
+router.route("/me").get(authController.protectTeacher, authController.me);
 router.route("/login").get(authController.getTeacherLogin).post(authController.postTeacherLogin);
 router.route("/logout").get(authController.protectTeacher, authController.logout);
+
 router.route("/forgot-password").post(authController.forgotPassword);
 router.route("/reset-password/:token").get(authController.getResetPasswordPage).patch(authController.resetPassword);
+router.route("/update-password").patch(authController.protectTeacher, authController.updatePassword);
+router
+  .route("/update-pfp")
+  .patch(
+    authController.protectTeacher,
+    authController.uploadPfp,
+    authController.resizeUserPhoto,
+    authController.updatePfp,
+  );
 
 router.get("/home", authController.protectTeacher, teacherController.getTeacherHome);
 // router.use("/courses", authController.protectTeacher, courseRouter);
-router.get("/courses", authController.protectTeacher, teacherController.getAllCoursesTaught);
+router.get("/courses", teacherController.redirectToTeacherHome);
 // Currently redirecting to /teachers/home
 router
   .route("/courses/:course_code")

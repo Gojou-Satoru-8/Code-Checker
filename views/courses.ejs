@@ -25,8 +25,8 @@
           <div class="card-body">
             <h2 class="card-title"><%= course.name %></h2>
             <p><%= course.code %></p>
-            <p><%= course.teacher.name %></p>
-            <p>Course info</p>
+            <p>Instructor: <%= course.teacher.name %></p>
+            <p><%= course.assignments.length %> Assignments</p>
             <div class="card-actions justify-end">
               <a href="/students/courses/<%= course.code %>">
                 <button class="btn btn-primary btn-circle">View</button>
@@ -41,7 +41,7 @@
             <div class="card-body">
               <h2 class="card-title"><%= course.name %></h2>
               <p><%= course.code %></p>
-              <p>Course info</p>
+              <p><%= course.assignments.length %> Assignments</p>
               <div class="card-actions justify-end">
                 <button class="btn btn-primary btn-circle"><a href="/teachers/courses/<%= course.code %>">View</a></button>
               </div>

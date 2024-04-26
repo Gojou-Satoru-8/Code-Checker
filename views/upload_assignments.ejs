@@ -47,10 +47,13 @@
                 <h2 class="card-title">Question <%= index + 1 %></h2>
                 <p><%= question.question %></p>
                 <div class="card-actions justify-center">
-                    <input type="file" name="<%= question.id %>" class="codeFiles file-input file-input-bordered file-input-primary w-full max-w-xs" />
+                    <input type="file" name="<%= question.id %>" class="codeFiles file-input file-input-bordered file-input-primary w-full max-w-xs" accept=".py,.js"/>
                     <!-- NOTE: we could directly use the existingSubmissionId for the URLs here, but routes with submissionId only are used by teachers to get submissions in evaluate page. That page is already complex complex, so better use a combination of questionId and studentId here, and submissionId there-->
                     <% if (question.existingSubmissionId) {%>
-                      <div class="view-delete-btns">
+                      <div class="view-delete-btns grid grid-cols-2 justify-items-center">
+                        <div class="badge badge-success gap-2 col-span-2">
+                          submitted
+                        </div>
                         <a href="/students/<%= student.id %>/submissions/<%= question.id %>">
                           <button type="button" class="view-btn btn btn-primary btn-ghost">View Submitted</button>
                         </a>
