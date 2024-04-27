@@ -43,7 +43,9 @@
               <p><%= course.code %></p>
               <p><%= course.assignments.length %> Assignments</p>
               <div class="card-actions justify-end">
-                <button class="btn btn-primary btn-circle"><a href="/teachers/courses/<%= course.code %>">View</a></button>
+                <a href="/teachers/courses/<%= course.code %>">
+                  <button class="btn btn-primary btn-circle">View</button>
+                </a>
               </div>
             </div>
           </div>  

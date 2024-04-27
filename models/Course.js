@@ -11,6 +11,8 @@ const courseSchema = new mongoose.Schema({
   code: {
     type: String,
     unique: true,
+    trim: true,
+    uppercase: true,
     required: [true, "A course must have a code"],
     minlength: [4, "Course code must be of at least 4 characters"],
     maxlength: [8, "Course code must be of at most 8 characters"],
@@ -18,7 +20,7 @@ const courseSchema = new mongoose.Schema({
   language: {
     type: String,
     enum: {
-      values: ["python", "js"],
+      values: ["py", "js", "c", "cpp"], // Here, we're using file type for streamlined file validations
       message: "Language must be any of python, js...",
     },
   },

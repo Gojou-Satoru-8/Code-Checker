@@ -108,7 +108,7 @@ exports.getAssignmentQuestions = catchAsync(async (req, res, next) => {
   //   data: { course, assignment },
   // });
   res.status(200).render("upload_assignments.ejs", {
-    course: { name: course.name, code: course_code },
+    course: { name: course.name, code: course_code, lang: course.language },
     student: { name: student.name, id: student.id },
     assignment,
   });
@@ -250,7 +250,10 @@ exports.viewSubmissionByStudentAndQuestion = catchAsync(async (req, res, next) =
 // deleteSubmissionById (name of handler if using submissionId in req.params)
 exports.deleteSubmissionByStudentAndQuestion = catchAsync(async (req, res, next) => {
   // const submission = await Submission.findByIdAndDelete(req.params.submissionId);
-  const submission = await Submission.findOne({ student: req.params.studentId, question: req.params.questionId });
+  const submission = await Submission.findOneAndDelete({
+    student: req.params.studentId,
+    question: req.params.questionId,
+  });
   console.log(submission);
   console.log("Deleted submission: ", submission);
 

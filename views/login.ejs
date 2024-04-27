@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
+    <title><%= userType %> Login</title>
     <link rel="shortcut icon" href="/src/assets/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/src/styles/output.css" />
   </head>
@@ -97,6 +97,15 @@
               <input type="button" value="Forgot Password" class="forgot-pass-btn btn text-error w-[48%]">
               <input type="submit" value="Login" class="submit-btn btn w-[48%] text-success">
             </div>
+            <% if (userType === "Student") { %>
+              <a href="/teachers/login">
+                <input type="button" value="I'm a Teacher" class="teacher-btn btn w-full text-info">
+              </a>
+            <% } else { %>
+              <a href="/students/login">
+                <input type="button" value="I'm a Student" class="teacher-btn btn w-full text-info">
+              </a>
+            <% } %>
           </form>
 
 

@@ -9,6 +9,10 @@ router.route("/").get(teacherController.redirectToTeacherHome);
 // NOTE: No need of authController.protectTeacher in routes where redirection occurs to a route that already has
 // that middleware (/teachers/home, for example)
 router.route("/me").get(authController.protectTeacher, authController.me);
+router
+  .route("/admin")
+  .get(authController.protectTeacher, authController.restrictTo("admin"), authController.getAdminPage);
+
 router.route("/login").get(authController.getTeacherLogin).post(authController.postTeacherLogin);
 router.route("/logout").get(authController.protectTeacher, authController.logout);
 

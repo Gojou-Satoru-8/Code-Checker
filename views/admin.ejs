@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/src/styles/output.css" />
+  </head>
+  <body>
+    <%- include("./partials/header") %>
+    <main class="min-h-[75vh] w-full bg-white flex justify-center items-center">
+        <div class="card my-10 w-full md:w-1/2 bg-base-100 shadow-xl shadow-teal-200">
+          <figure class="px-10 pt-10 w-1/2 m-auto">
+            <div class="avatar">
+              <div class="w-24 rounded-full">
+                <% if (locals.admin?.photo) { %>
+                  <img src="/user-images/<%= locals.admin.photo %>" />
+                <% } else { %>
+                  <img src="/src/assets/account-image.png" />
+                <% } %>
+              </div>
+            </div>
+          </figure>
+          
+          <div class="card-body items-center text-center">
+            <h1 class="text-4xl text-center text-error">ADMIN PANEL</h1>
+            <h1 class="card-title text-3xl"><%= admin.name %></h1>
+            <h2 class="text-xl"> <%= admin.email %> </h2>
+            
+            <div class="w-2/3">
+              <div id="success-alert" role="alert" class="my-2 hidden alert alert-success w-full justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="stroke-current shrink-0 h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span>Logged In successfully!</span>
+              </div>
+              <div id="error-alert" role="alert" class="my-2 hidden alert alert-error w-full justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="stroke-current shrink-0 h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span>Error! Task failed successfully.</span>
+              </div>
+              <div id="info-alert" role="alert" class="my-2 hidden alert alert-info w-full justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  class="stroke-current shrink-0 w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+                <span>Fetching details ... Please wait </span>
+                <span class="loading loading-infinity loading-md"></span>
+              </div>
+              <form class="password-form labels py-4 hidden flex-col gap-3" action="" method="">
+                <label class="input input-bordered flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    class="w-4 h-4 opacity-70"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <input
+                    type="password"
+                    name="password-current"
+                    id="password-current"
+                    class="grow"
+                    placeholder="Current Password"
+                    required
+                  />
+                  <input type="checkbox" class="passView toggle toggle-md toggle-success" />
+                  <!-- <img src="/src/assets/view.png" width="40px" srcset="" /> -->
+                </label>
+                <label class="input input-bordered flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    class="w-4 h-4 opacity-70"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <input
+                    type="password"
+                    name="password-new"
+                    id="password-new"
+                    class="grow"
+                    placeholder="New Password"
+                    required
+                  />
+                  <input type="checkbox" class="passView toggle toggle-md toggle-success" />
+                  <!-- <img src="/src/assets/view.png" width="40px" srcset="" /> -->
+                </label>
+                <label class="input input-bordered flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    class="w-4 h-4 opacity-70"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <input
+                    type="password"
+                    name="password-confirm"
+                    id="password-confirm"
+                    class="grow"
+                    placeholder="Confirm Password"
+                  />
+                  <input type="checkbox" class="passView toggle toggle-md toggle-success" />
+                  <!-- <img src="./src/assets/view.png" width="40px" srcset="" /> -->
+                </label>
+                <input type="submit" value="Update Password" class="submit-btn btn text-success" />
+              </form>
+              <form class="pfp-form labels py-4 hidden flex-col gap-3">
+                <label for="pfp" class="text-2xl">Choose a new PFP</label>
+                <input
+                  id="pfp"
+                  type="file"
+                  name="pfp"
+                  class="file-input file-input-bordered file-input-success w-full"
+                  accept=".jpg,.png"
+                  required
+                />
+                <input type="submit" value="Update PFP" class="submit-btn btn text-success" />
+              </form>
+            </div>
+            <div class="flex flex-col items-center w-full gap-2">
+                <div class="student-management w-3/4">
+                    <h1 class="text-2xl py-8">Student Management</h1>
+                    <div class="w-full flex flex-wrap justify-center gap-4 items-center m-auto">
+                        <a href="/students/new-student" class="w-1/3">
+                            <button class="edit-pass-btn btn btn-success w-full">Add New Student</button>
+                        </a>
+                        <a href="/students/update-student" class="w-1/3">
+                            <button class="edit-pfp-btn btn btn-success w-full">Update Student</button>
+                        </a>
+                        <a href="/students/delete-student" class="w-1/3">
+                            <button class="edit-pfp-btn btn btn-success w-full">Delete Student</button>
+                        </a>
+                    </div>
+                </div>
+                <div class="course-management w-3/4">
+                    <h1 class="text-2xl py-8">Course Management</h1>
+                    <div class="w-1/2 m-auto">
+                        <a href="/courses/new-course">
+                            <button class="edit-pass-btn btn btn-success w-full">Add New Course</button>
+                        </a>
+                    </div>
+                </div>
+                <div class="teacher-management w-3/4">
+                    <h1 class="text-2xl py-8">Teacher Management</h1>
+                    <div class="w-1/2 m-auto">
+                        <a href="/teachers/new-teacher">
+                            <button class="edit-pfp-btn btn btn-success w-full">Add New Teacher</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    <%- include("./partials/footer") %>
+  </body>
+</html>

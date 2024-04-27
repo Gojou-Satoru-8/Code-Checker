@@ -14,8 +14,8 @@ const getLangFromFileExt = (ext) => {
   const lang = {
     py: "python3",
     js: "node",
-    // c: "gcc",
-    // cpp: "g++"
+    c: "gcc",
+    cpp: "g++",
   };
   return lang[ext];
 };
@@ -28,8 +28,8 @@ exports.getCodes = catchAsync(async (req, res, next) => {
   // console.log("File-extension:", fileExt);
   const lang = getLangFromFileExt(fileExt);
   if (!lang) throw new AppError(`File type unsupported, no command for extension ${fileExt}`, 400, "JSON");
-
-  const scriptPath = path.join(__dirname, "..", "tests/run_script.sh");
+  const scriptFile = lang === "gcc" || lang === "g++" ? "run_script_compiled.sh" : "run_script.sh";
+  const scriptPath = path.join(__dirname, "..", "tests", scriptFile);
   const filePath = path.resolve(__dirname, "..", `public/code-uploads/${submission.filePath}`);
 
   console.log("Script Path:", scriptPath, "| File path: ", filePath);
@@ -55,8 +55,8 @@ exports.postCode = (req, res, next) => {
   const { lang, source } = req.body;
 
   console.log(lang, source);
-  const scriptPath = path.join(__dirname, "..", "tests/run_script.sh");
-  const filePath = path.resolve(__dirname, "..", `public/code-uploads/${source}`);
+  const scriptPath = path.join(__dirname, "..", "tests/run_script_java.sh");
+  const filePath = path.resolve(__dirname, "..", `files/${source}`);
   // console.log("-------------------------------");
   // console.log("Sricpt Path:", scriptPath, "| File path: ", filePath);
   console.log(path.isAbsolute(scriptPath), path.isAbsolute(filePath));

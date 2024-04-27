@@ -23,8 +23,8 @@ const infoAlert = document.querySelector(".alert-info");
 const courseCode = document.querySelector(".course-code").textContent.trim();
 const assignmentID = document.querySelector(".assign-id").textContent.trim();
 
-// const acceptedFileExtensions = ["py", "c", "cpp", "js"];
-const acceptedFileExtensions = ["py", "js"];
+const acceptedFileExtensions = ["py", "c", "cpp", "js"];
+// const acceptedFileExtensions = ["py", "js"];
 
 const addDeletionBehaviour = function () {
   viewDeleteBtnsDivs.forEach((div) => {
@@ -113,7 +113,8 @@ submitBtn.addEventListener("click", async (e) => {
           `Successfully uploaded file: ${files.map(([oldFileName]) => oldFileName).join(",")}.`,
         );
         console.log(results.questionIds);
-
+        // location.assign(window.location.href);
+        // NOTE: Just refresh the page, instead of all the following operations
         results.questionIds.forEach((questionId) => {
           const [inputField] = document.getElementsByName(questionId);
           //   console.log("Inputfield", inputField);

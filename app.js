@@ -19,6 +19,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 // app.use(flash());
 
+app.route("/").get((req, res, next) => {
+  if (req.cookies?.jwt_student) return res.status(302).redirect("/students/home");
+  if (req.cookies?.jwt_teacher) return res.status(302).redirect("/teachers/home");
+  else res.status(200).render("landing.ejs");
+});
+
 app.use("/students", studentRouter);
 app.use("/teachers", teacherRouter);
 app.route("/api/v1/codes/:submissionId?").get(codeController.getCodes).post(codeController.postCode);

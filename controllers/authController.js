@@ -389,3 +389,15 @@ exports.updatePfp = catchAsync(async (req, res, next) => {
   );
   res.status(200).json({ status: "success", message: "Pfp Changed Successfully" });
 });
+
+exports.restrictTo = (...acceptedRoles) => {
+  return (req, res, next) => {
+    if (!acceptedRoles.includes(req.teacher.role))
+      throw new AppError(`Unauthorized Access! Route restricted to roles: ${acceptedRoles.join(", ")}`, 403, "render");
+    next();
+  };
+};
+
+exports.getAdminPage = (req, res, next) => {
+  res.status(200).render("admin.ejs", { admin: req.teacher });
+};
