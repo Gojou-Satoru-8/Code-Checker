@@ -40,27 +40,47 @@ exports.addStudentstoCourse = catchAsync(async (req, res, next) => {
   const studentEmails = req.body.students.split(",");
   console.log({ studentEmails });
 
-  // Convert Student Emails to Student Docs from DB, then derive the Object Ids.
-  const studentDocs = await Promise.all(
-    studentEmails.map(async (email) => await Student.findOne({ email: email.trim() })),
-  );
-  console.log({ studentDocs });
-  const studentIds = studentDocs.map((doc) => doc._id);
+  // Using Student Emails, we query the Student Docs from DB, then derive the Object Ids.
+  // METHOD 1: This doesn't account for emails which aren't present, thus adding undefined to output array
+  //   const studentIds = await Promise.all(
+  //     studentEmails.map(async (email) => {
+  //       const studentDoc = await Student.findOne({ email: email.trim() });
+  //       return studentDoc?._id;
+  //     }),
+  //   );
+  // METHOD 2:
+  const studentIds = [];
+  for (const email of studentEmails) {
+    const studentDoc = await Student.findOne({ email: email.trim() });
+    if (studentDoc) studentIds.push(studentDoc._id);
+  }
   console.log({ studentIds });
 
-  const course = await Course.findOne({ code: courseCode });
-  console.log("Existing students: ", course);
-  if (!course) throw new AppError("No such course with that code", 404, "JSON");
+  // Find the course to update:
+  //   const course = await Course.findOne({ code: courseCode });
+  //   console.log("Existing students: ", course);
+  //   if (!course) throw new AppError("No such course with that code", 404, "JSON");
 
-  const filteredStudentIds = studentIds.filter((id) => !course.students.includes(id));
-  console.log({ filteredStudentIds });
+  //   const filteredStudentIds = studentIds.filter((id) => !course.students.includes(id));
+  //   console.log({ filteredStudentIds });
 
-  course.students.push(...filteredStudentIds);
-  await course.save({ runValidators: true });
+  //   course.students.push(...filteredStudentIds);
+  //   await course.save({ runValidators: true });
+  const updatedCourse = await Course.findOneAndUpdate(
+    { code: courseCode },
+    { $addToSet: { students: { $each: studentIds } } },
+    { new: true },
+  ); // This adds each element of studendIds separately to the students set, without $each the array would be added
+  //   as an element
+  //   Now course has the students. So students should have the course too.
+  const updatedStudents = await Student.updateMany(
+    { _id: { $in: studentIds } },
+    { $addToSet: { courses: updatedCourse._id } },
+  );
 
   res.status(200).json({
     status: "success",
-    data: course,
+    data: { updatedStudents, updatedCourse },
   });
 });
 
@@ -106,35 +126,35 @@ exports.deleteStudent = catchAsync(async (req, res, next) => {
   });
 });
 
-// ROUTE: /admin/students/:student_email/new-course (DELETE)
-exports.addCoursesToStudent = catchAsync(async (req, res, next) => {
-  const studentEmail = req.params.student_email;
-  console.log({ studentEmail });
+// ROUTE: /admin/students/:student_email/new-course (PATCH) (Disabled)
+// exports.addCoursesToStudent = catchAsync(async (req, res, next) => {
+//   const studentEmail = req.params.student_email;
+//   console.log({ studentEmail });
 
-  const courseCodes = req.body.courses.split(",");
-  console.log({ courseCodes });
+//   const courseCodes = req.body.courses.split(",");
+//   console.log({ courseCodes });
 
-  // Convert Course Codes to Course Docs from DB, then derive the Object Ids.
-  const courseDocs = await Promise.all(courseCodes.map(async (code) => await Course.findOne({ code: code.trim() })));
+//   // Convert Course Codes to Course Docs from DB, then derive the Object Ids.
+//   const courseDocs = await Promise.all(courseCodes.map(async (code) => await Course.findOne({ code: code.trim() })));
 
-  console.log({ courseDocs });
-  const courseIds = courseDocs.map((doc) => doc._id);
-  console.log({ courseIds });
+//   console.log({ courseDocs });
+//   const courseIds = courseDocs.map((doc) => doc._id);
+//   console.log({ courseIds });
 
-  const student = await Student.findOne({ email: studentEmail });
-  if (!student) throw new AppError("No such student with that email", 404, "JSON");
+//   const student = await Student.findOne({ email: studentEmail });
+//   if (!student) throw new AppError("No such student with that email", 404, "JSON");
 
-  const filteredCourseIds = courseIds.filter((id) => !student.courses.map((course) => course.id).includes(id));
-  // NOTE: Here, student is populated with courses, thus student.courses is an array of Docs, hence we map them
-  //   to their ids in the filter
-  console.log("Student Courses:", student.courses);
-  console.log({ filteredCourseIds });
+//   const filteredCourseIds = courseIds.filter((id) => !student.courses.map((course) => course.id).includes(id));
+//   // NOTE: Here, student is populated with courses, thus student.courses is an array of Docs, hence we map them
+//   //   to their ids in the filter
+//   console.log("Student Courses:", student.courses);
+//   console.log({ filteredCourseIds });
 
-  student.courses.push(...filteredCourseIds);
-  await student.save({ validateBeforeSave: true });
+//   student.courses.push(...filteredCourseIds);
+//   await student.save({ validateBeforeSave: true });
 
-  res.status(200).json({ status: "success", data: student });
-});
+//   res.status(200).json({ status: "success", data: student });
+// });
 
 // ADMIN ROUTES FOR TEACHERS:
 // ROUTE: /admin/teachers
