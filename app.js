@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 // const flash = require("express-flash");
 const studentRouter = require("./routes/studentRouter");
 const teacherRouter = require("./routes/teacherRouter");
+const adminRouter = require("./routes/adminRouter");
 const codeController = require("./controllers/codeController");
 const globalErrorHandler = require("./controllers/errorController");
 // const flashHandler = require("./controllers/flashController");
@@ -27,6 +28,7 @@ app.route("/").get((req, res, next) => {
 
 app.use("/students", studentRouter);
 app.use("/teachers", teacherRouter);
+app.use("/admin", adminRouter);
 app.route("/api/v1/codes/:submissionId?").get(codeController.getCodes).post(codeController.postCode);
 // app.use("/flash", flashHandler);
 

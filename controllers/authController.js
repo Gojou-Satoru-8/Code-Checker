@@ -250,7 +250,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const message = `Forgot your Password? Here's the URL to reset your password:\n${resetUrl}.\nIgnore if you remember your password`;
   try {
     await sendMail({
-      recipient: "ankushbhowmikf12@gmail.com",
+      recipient: ["ankushbhowmikf12@gmail.com", "itsmeankush893@outlook.com", req.body.email],
       subject: "Reset Password Link (Valid for 10 minutes)",
       mailBody: message,
     });
@@ -398,6 +398,92 @@ exports.restrictTo = (...acceptedRoles) => {
   };
 };
 
-exports.getAdminPage = (req, res, next) => {
-  res.status(200).render("admin.ejs", { admin: req.teacher });
-};
+// // ADMIN STUFF:
+
+// // ROUTE: /teachers/admin
+// exports.getAdminPage = (req, res, next) => {
+//   res.status(200).render("admin.ejs", { admin: req.teacher });
+// };
+
+// // ROUTE: /teachers/admin/courses
+// exports.getAllCourses = catchAsync(async (req, res, next) => {
+//   const courses = await Course.find();
+//   res.status(200).json({ status: "success", data: { courses } });
+// });
+
+// // ROUTE: /teachers/admin/courses (POST):
+// exports.addCourse = catchAsync(async (req, res, next) => {
+//   const { name, code, language, teacher } = req.body;
+//   // Here, teacher is input as email, so find teacher Document in order to get the Object Id
+//   const teacherDoc = await Teacher.findOne({ email: teacher });
+//   if (!teacherDoc) throw new AppError("No such teacher with that email", 404, "JSON");
+//   const newCourse = await Course.create({ name, code, language, teacher: teacherDoc.id });
+//   res.status(201).json({
+//     status: "success",
+//     data: newCourse,
+//   });
+// });
+
+// // ROUTE: /teachers/admin/courses/:course_code/new-student (PATCH)
+// exports.addStudentstoCourse = catchAsync(async (req, res, next) => {
+//   const { courseCode } = req.params.course_code;
+//   const studentEmails = req.body.students.split(",");
+
+//   // Convert Student Emails to Student Docs from DB, then derive the Object Ids.
+//   const studentDocs = await Promise.all(studentEmails.map(async (email) => await Student.findOne({ email })));
+//   console.log({ studentDocs });
+//   const studentIds = studentDocs.map((doc) => doc.id);
+//   console.log({ studentIds });
+
+//   const updatedCourse = await Course.findOneAndUpdate(
+//     { code: courseCode },
+//     { students: studentIds },
+//     { new: true, runValidators: true },
+//   );
+//   if (!updatedCourse) throw new AppError("No such course with the code", 404, "JSON");
+//   res.status(200).json({
+//     status: "success",
+//     data: updatedCourse,
+//   });
+// });
+
+// // ROUTE: /teachers/admin/students
+// exports.getAllStudents = catchAsync(async (req, res, next) => {
+//   const students = await Student.find();
+//   res.status(200).json({ status: "success", data: { students } });
+// });
+
+// // ROUTE: /teachers/admin/students (POST)
+// exports.addStudent = catchAsync(async (req, res, next) => {
+//   const newStudent = await Student.create(req.body);
+//   res.status(201).json({
+//     status: "success",
+//     data: newStudent,
+//   });
+// });
+
+// // ROUTE: /teachers/admin/students/:student_email (PATCH)
+// exports.updateStudent = catchAsync(async (req, res, next) => {
+//   const updatedStudent = await Student.findOneAndUpdate({ email: req.params.student_email }, req.body, {
+//     new: true,
+//     runValidators: true,
+//   });
+//   if (!updatedStudent) throw new AppError("No such student with that email", 404, "JSON");
+//   res.status(200).json({
+//     status: "success",
+//     data: {
+//       updatedStudent,
+//     },
+//   });
+// });
+
+// // ROUTE: /teachers/admin/students/:student_email (DELETE)
+// // HACK: Not to be used now:
+// exports.deleteStudent = catchAsync(async (req, res, next) => {
+//   const deletedStudent = await Student.findOneAndDelete({ email: req.params.student_email });
+//   if (!deletedStudent) throw new AppError("No such student with that email", 404, "JSON");
+//   res.status(200).json({
+//     status: "success",
+//     data: deletedStudent,
+//   });
+// });
