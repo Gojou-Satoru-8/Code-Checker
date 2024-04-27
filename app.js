@@ -2,6 +2,12 @@ const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 // const flash = require("express-flash");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
+const hpp = require("hpp");
+
 const studentRouter = require("./routes/studentRouter");
 const teacherRouter = require("./routes/teacherRouter");
 const adminRouter = require("./routes/adminRouter");
@@ -11,10 +17,35 @@ const globalErrorHandler = require("./controllers/errorController");
 const AppError = require("./utils/appError");
 
 const app = express();
-app.use(express.static(`${__dirname}/public`));
-// MIDDLEWARES:
 
+// MIDDLEWARES:
+app.use(express.static(`${__dirname}/public`));
+
+// 1) Set security HTTP Headers:
+app.use(helmet());
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+
+// 2) Limit number of requests in a given time window (in ms) from a certain IP
+app.use(
+  "/",
+  rateLimit({
+    max: process.env.NODE_ENV === "production" ? 300 : 1000,
+    windowMs: 60 * 60 * 1000,
+    message: "Too many requests from this IP, please try again in an hour",
+  }),
+);
+
+// 3) Sanitizing POST request body against NoSQL query injection and XSS:
+app.use(mongoSanitize());
+app.use(xss());
+
+// 4) Prevent HTTP Parameter Pollution in URL query string:
+app.use(
+  hpp({
+    whitelist: ["name", "programme", "code", "course", "email", "language", "courses", "role"],
+  }),
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
