@@ -12,12 +12,12 @@
     <%- include("./partials/header") %>
 
     <main class="min-h-[80vh] bg-white flex flex-col gap-8">
-      <section class="welcome-msg mt-6 mx-6 min-h-[30vh] shadow-lg rounded-xl">
-        <h1 class="text-3xl py-8 text-center text-primary-content">Welcome <%= (locals.student) ? student.name: teacher.name %></h1>
-        <p class="text-lg px-12 text-primary-content">Here's a list of the courses you're <%= (locals.student) ? "taking": "teaching" %></p>
+      <section class="welcome-msg mt-6 mx-6 min-h-[30vh] shadow-lg rounded-xl text-primary-content">
+        <h1 class="text-3xl py-8 text-center">Welcome <%= (locals.student) ? student.name: teacher.name %></h1>
+        <p class="text-lg px-12">Here's a list of the courses you're <%= (locals.student) ? "taking": "teaching" %></p>
       </section>
       <section
-        class="courses mx-4 mb-8 grid grid-cols-[45%_45%] md:grid-cols-[30%_30%_30%] grid-rows-2 auto-rows-fr gap-12 justify-center"
+        class="courses mx-4 mb-8 grid grid-cols-[95%] md:grid-cols-[30%_30%_30%] grid-rows-2 auto-rows-fr gap-12 justify-center"
       >
       <% if (locals.student) {%>
         <% student.courses.forEach((course) => {%>

@@ -22,7 +22,7 @@ const app = express();
 app.use(express.static(`${__dirname}/public`));
 
 // 1) Set security HTTP Headers:
-app.use(helmet());
+// app.use(helmet());
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 // 2) Limit number of requests in a given time window (in ms) from a certain IP

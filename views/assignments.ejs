@@ -13,11 +13,11 @@
 
     <main class="min-h-[80vh] bg-white flex flex-col gap-8">
       <section class="welcome-msg mt-6 mx-6 min-h-[20vh] bg-white shadow-lg rounded-xl text-primary-content p-4">
-        <h1 class="text-3xl py-8 text-center text-primary-content"><%= course.code %> - <%= course.name %></h1>
+        <h1 class="text-3xl py-8 text-center "><%= course.code %> - <%= course.name %></h1>
         <% if (locals.student) { %>
-          <p class="text-lg px-12 text-primary-content">This course is taught by <%= course.teacher.name %></p>
+          <p class="text-lg px-12 ">This course is taught by <%= course.teacher.name %></p>
         <% } %>
-        <p class="text-lg px-12 text-primary-content">This course has <%= course.assignments.length %> assignments</p>
+        <p class="text-lg px-12 ">This course has <%= course.assignments.length %> assignments</p>
         <% if (locals.teacher) { %>
           <div class="w-max mx-auto my-2">
             <a href="/teachers/courses/<%= course.code %>/new-assignment"><button type="button" class="btn btn-primary">New Assignment</button></a>

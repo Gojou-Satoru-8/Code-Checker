@@ -37,12 +37,12 @@
         </div>
         
       </section>
-      <form class="form text-white mx-6" action="" method="POST" enctype="multipart/form-data">
+      <form class="form mx-6" action="" method="POST" enctype="multipart/form-data">
         <section
           class="grid mb-6 grid-cols-[45%_45%] grid-rows-2 auto-rows-fr gap-8 justify-center"
         >
           <% assignment.questions.forEach((question, index) => { %>
-            <div class="card bg-base-100 shadow-xl">
+            <div class="card bg-base-100 shadow-xl ">
               <div class="card-body">
                 <h2 class="card-title">Question <%= index + 1 %></h2>
                 <p><%= question.question %></p>
